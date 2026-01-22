@@ -1,6 +1,9 @@
 :root {
   color-scheme: dark;
   --auto-grid-min-size: 16rem;
+  --dark-accent-color: #c0c0c0;
+  --dark-background-color: 0 0 0;
+  --border-radius: 8px;
 }
 
 html {
@@ -16,7 +19,7 @@ html {
 
 /* Utitlity Classes */
 .container {
-  margin: 40px auto;
+  margin: 20px auto;
   width: 70vw;
 }
 
@@ -33,7 +36,7 @@ html {
   font-size: 1rem;
   color: #49bd4e; /* accessible green */
   pointer-events: none;
-  border: 1px solid #c0c0c0;
+  border: 1px solid var(--dark-accent-color);
   border-radius: 50px;
   width: 25px;
   text-align: center;
@@ -53,91 +56,10 @@ html {
   font-weight: bold;
   color: #c62828; /* accessible red */
   pointer-events: none;
-  border: 1px solid #c0c0c0;
+  border: 1px solid var(--dark-accent-color);
   border-radius: 50px;
   width: 25px;
   text-align: center;
-}
-
-/* Base styles */
-body {
-  font-family: "DM Sans", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #000000;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-}
-
-#assignment-grid {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--auto-grid-min-size), 1fr)
-  );
-  gap: 20px;
-  border: 1px solid #c0c0c0;
-  padding: 20px;
-  border-radius: 6px;
-  background-color: rgba(0, 0, 0, 0.4);
-
-  & a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  & article {
-    border: 1px solid #c0c0c0;
-    padding: 10px 20px;
-    border-radius: 6px;
-    background-color: rgba(0, 0, 0, 0.2);
-
-    & h2 {
-      color: #fff;
-      margin: 5px 0;
-    }
-  }
-  & article:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-}
-
-#assignment {
-  border: 1px solid #c0c0c0;
-  padding: 20px;
-  border-radius: 6px;
-  background-color: rgba(0, 0, 0, 0.4);
-
-& h2{
-  margin:0;
-} 
-
-& .due{
-  margin:0;
-} 
-
-& p.question{
-  font-weight:bold;
-  font-size:1.2rem;
-  border:1px solid #c0c0c0;
-  background-color: rgba(0, 0, 0, 0.9);
-  padding:10px;
-}
-
-}
-
-/* Dark mode styles */
-body.dark {
-  background-color: #282626;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='10' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
-  color: #ffffff;
-}
-
-/* Light mode styles */
-body.light {
-  background-color: #ffffff;
-  color: #000000;
 }
 
 /* Toggle button */
@@ -150,7 +72,7 @@ body.light {
   font-size: 16px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   background-color: #000;
   color: #ffffff;
   transition:
@@ -159,7 +81,178 @@ body.light {
 }
 
 .toggle-btn:hover {
-  background-color: #c0c0c0;
+  background-color: var(--dark-accent-color);
+}
+
+/* Base styles */
+body {
+  font-family: "DM Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+header.primary {
+  & h1 {
+    font-size: 3rem;
+    margin: 0;
+  }
+}
+main {
+  & header {
+    border-bottom: 1px solid var(--dark-accent-color);
+    text-align: right;
+    margin-bottom: 10px;
+
+    & h2 {
+      float: left;
+    }
+
+    & .legend {
+      display: inline-block;
+      padding-top: 27px;
+
+      & div {
+        display: inline-block;
+        padding-right: 40px;
+        margin-bottom: 10px;
+      }
+
+      & .complete::before {
+        right: 8px;
+        bottom: -12px;
+      }
+
+      & .ip::before {
+        right: 8px;
+        bottom: -12px;
+      }
+    }
+  }
+}
+#assignment-grid {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--auto-grid-min-size), 1fr)
+  );
+  gap: 20px;
+  border: 1px solid var(--dark-accent-color);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  background-color: rgb(var(--dark-background-color) / 0.4);
+
+  & a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  & article {
+    border: 1px solid var(--dark-accent-color);
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    background-color: rgb(var(--dark-background-color) / 0.2);
+
+    & h2 {
+      color: #fff;
+      margin: 5px 0;
+    }
+  }
+  & article:hover {
+    background-color: rgb(var(--dark-background-color) / 0.8);
+  }
+}
+
+/* Assignment Page */
+
+#assignment {
+  border: 1px solid var(--dark-accent-color);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  background-color: rgba(0, 0, 0, 0.4);
+
+  header {
+    border: none;
+  }
+
+  & h2 {
+    margin: 0;
+  }
+
+  & .due {
+    margin: 0;
+  }
+
+  & p.question {
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 1px solid var(--dark-accent-color);
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    border-radius: var(--border-radius);
+  }
+
+  & a.rth {
+    color: #fff;
+    text-align: center;
+    display: block;
+    margin: auto;
+    background: red;
+    padding: 10px;
+    width: 160px;
+    border-radius: var(--border-radius);
+    background-color: rgb(var(--dark-background-color) / 1);
+    border: 1px solid var(--dark-accent-color);
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+/* Dark mode styles */
+body.dark {
+  background-color: #000000;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='10' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+  color: #ffffff;
+}
+
+/* Light mode styles */
+body.light {
+  background-color: #fff;
+  color: #000000;
+  background-image: url(../img/vector-light.jpg);
+  background-position: bottom;
+  background-repeat: no-repeat;
+  height: 100vh;
+
+  & #assignment-grid {
+    background-color: rgb(var(--dark-background-color) / 0.8);
+  }
+  & #assignment {
+    border: 1px solid var(--dark-accent-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    background-color: rgb(var(--dark-background-color) / 0.2);
+
+    & h2 {
+      margin: 0;
+    }
+
+    & .due {
+      margin: 0;
+    }
+
+    & p.question {
+      font-weight: bold;
+      font-size: 1.2rem;
+      border: 1px solid var(--dark-accent-color);
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+    }
+  }
 }
 
 /*! HTML5 Boilerplate v9.0.1 | MIT License | https://html5boilerplate.com/ */
