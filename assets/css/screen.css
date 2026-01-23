@@ -226,6 +226,7 @@ body.light {
   background-image: url(../img/vector-light.jpg);
   background-position: bottom;
   background-repeat: no-repeat;
+  background-size: cover;
   height: 100vh;
 
   & #assignment-grid {
