@@ -26,19 +26,31 @@
             <p class="due">Due: 1.27.2026</p>
           </header>
           <p class="question">
-            Why is the minimum score on an assignment in this course 50%? In your HW1 file, give your opinion or conclusion, and also explain why.
+1. Why is the minimum score on an assignment in this course 50%? In your HW1 file, give your opinion or conclusion, and also explain why.
           </p>
           <p>
-            While a 50-point floor promotes inclusive pedagogy by correcting the
-            mathematical bias of the zero and preventing "mathematical
-            hopelessness" for students facing external crises, it risks masking
-            a lack of foundational competency in technical fields like front-end
-            development. Balancing this requires weighing the benefit of
-            sustained student persistence against the potential for grade
-            inflation and the "false floor" that might signal a level of mastery
-            not actually present in a student's code.
+            A 50-point floor makes a lot of sense from an inclusive pedagogy standpoint. It removes the sense of mathematical hopelessness where one missed deadline effectively ends the semester, which disproportionately impacts students dealing with ADHD, family issues, or other real-life disruptions. It prevents a single zero from functioning like a negative grade and keeps the possibility of passing visible, so students don’t disengage the moment things go sideways.</p><p>The tension is that in a technical, skills-based field like front-end development, a 50% floor can become a false floor. It can obscure the difference between a student who made a recoverable mistake and one who genuinely cannot produce working code. That’s the balance to manage: offering a path back from failure without inflating outcomes or implying competence that is not actually demonstrated in the work.</p>
+          </p>
+<p class="question">
+2. Build an HTML test or demo page, which contains examples of various HTML commands. This new page tests your browser to see how it handles different HTML commands and if it handles them properly. The examples should explain themselves. 
           </p>
           <a href="html-reference.html">HTML Reference</a>
+
+<p class="question">
+3.  Explain (1) what ChatGPT says that Claude.ai does not, (2) what Claude a says that ChatGPT
+does not, and (3) if either one of them (or both) hallucinated anything that is not actually correct.
+          </p>
+<ol>
+  <li>
+  <p>ChatGPT takes a more encyclopedic approach by breaking HTML’s role into clearly defined, user-facing responsibilities. It describes HTML as the structure that organizes visible content such as profiles, posts, and comments into a clear hierarchy, making complex pages readable and navigable. It also emphasizes HTML’s function in disseminating information, highlighting the use of hyperlinks to connect content both within the platform and to external sources. At the same time, it is careful to draw a boundary around what HTML does not handle, offering a more detailed explanation of the hidden backend systems, such as authentication, security protocols, and server-side databases, that operate beyond HTML’s scope.</p>
+</li>
+<li>Claude’s response is more grounded in semantic HTML and a modern understanding of the client–server relationship. It explicitly calls out the use of headings, lists, and emphasis to improve readability and accessibility, a key technical detail that ChatGPT’s explanation overlooks. Claude also shifts the discussion of personalization toward how the feed is determined, correctly framing those decisions as the result of server-side algorithms rather than focusing primarily on data storage. Overall, it provides a clearer architectural picture by identifying HTML as a client-side language that works hand in hand with server-side tools, offering a more accurate and holistic view of how responsibilities are divided in a modern web application.</li>
+<li>
+  On the hallucination front, both LLMs largely stayed on solid ground, but GPT did stumble on one important detail. It suggested that users can format Facebook posts using HTML tags like <b> or <i>, which isn’t actually the case. Facebook operates on a plain-text input system, and any “bold” or stylized text users see is typically the result of Unicode characters or platform-specific UI controls that map to an internal data format, not raw HTML supplied by the user.
+</li>
+</ol>
+
+
         </article>
         <a href="../index.html" class="rth">Course Index</a>
       </section>
