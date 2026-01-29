@@ -100,6 +100,18 @@ header.primary {
   }
 }
 main {
+
+    & > a.rth {
+      color: #fff;
+      text-align: center;
+      float: right;
+      padding: 10px;
+      width: 160px;
+      border-radius: var(--border-radius);
+      background-color: rgb(var(--dark-background-color) / 1);
+      border: 1px solid var(--dark-accent-color);
+    }
+
   & header {
     border-bottom: 1px solid var(--dark-accent-color);
     text-align: right;
@@ -172,6 +184,7 @@ main {
   padding: 20px;
   border-radius: var(--border-radius);
   background-color: rgba(0, 0, 0, 0.4);
+  clear:both;
 
   header {
     border: none;
@@ -209,6 +222,12 @@ main {
 
   a:hover {
     text-decoration: none;
+  }
+
+  & article {
+    border-bottom: 1px solid var(--dark-accent-color);
+    margin-bottom: 30px;
+    padding-bottom: 30px;
   }
 }
 
