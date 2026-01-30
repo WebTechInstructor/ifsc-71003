@@ -339,99 +339,208 @@ PageMaker including versions of <sub>Lorem</sub><sup>Ipsum</sup>.
             <h2 class="section-heading">Forms</h2>
             <div class="output">
               <form action="processing-script.php" method="get">
-                <fieldset>
-                  <legend>Sample Form Fields</legend>
-                  <label for="first-name">First Name</label>
-                  <input
-                    type="input"
-                    id="first-name"
-                    name="first-name"
-                    required
-                  />
-                  <label for="comments">Comments</label>
-                  <textarea id="comments" name="comments"></textarea>
-                  <label for="fav-car">Favorite Car Maker</label>
-                  <select id="fav-car" name="fav-car">
-                    <option value="F">Ford</option>
-                    <option value="C">Chevy</option>
-                    <option value="D">Dodge</option>
-                    <option value="null" selected>---</option>
-                  </select>
-                  <input type="submit" value="Send" />
-                  <fieldset>
-                    <legend>Select a maintenance drone:</legend>
+  <fieldset>
+    <legend>Sample Form Fields</legend>
+    <label for="first-name">First Name</label>
+    <input type="input" id="first-name" name="first-name" required />
+    <label for="comments">Comments</label>
+    <textarea id="comments" name="comments"></textarea>
+    <label for="fav-car">Favorite Car Maker</label>
+    <select id="fav-car" name="fav-car">
+      <option value="F">Ford</option>
+      <option value="C">Chevy</option>
+      <option value="D">Dodge</option>
+      <option value="null" selected>---</option>
+    </select>
+    <input type="submit" value="Send" />
+    <fieldset>
+      <legend>Select a maintenance drone:</legend>
 
-                    <div>
-                      <input
-                        type="radio"
-                        id="huey"
-                        name="drone"
-                        value="huey"
-                        checked
-                      />
-                      <label for="huey">Huey</label>
-                    </div>
+      <div>
+        <input type="radio" id="huey" name="drone" value="huey" checked />
+        <label for="huey">Huey</label>
+      </div>
 
-                    <div>
-                      <input
-                        type="radio"
-                        id="dewey"
-                        name="drone"
-                        value="dewey"
-                      />
-                      <label for="dewey">Dewey</label>
-                    </div>
+      <div>
+        <input type="radio" id="dewey" name="drone" value="dewey" />
+        <label for="dewey">Dewey</label>
+      </div>
 
-                    <div>
-                      <input
-                        type="radio"
-                        id="louie"
-                        name="drone"
-                        value="louie"
-                      />
-                      <label for="louie">Louie</label>
-                    </div>
-                  </fieldset>
-                </fieldset>
-              </form>
+      <div>
+        <input type="radio" id="louie" name="drone" value="louie" />
+        <label for="louie">Louie</label>
+      </div>
+    </fieldset>
+  </fieldset>
+
+  <fieldset>
+    <legend>HTML5 Input Types</legend>
+
+    <label>Text</label>
+    <input type="text">
+
+    <label>Time</label>
+    <input type="time">
+
+    <label>Date</label>
+    <input type="date" min="2015-05-15" max="2015-05-25">
+
+    <label>Datetime</label>
+    <input type="datetime">
+
+    <label>Datetime-local</label>
+    <input type="datetime-local" min="2014-09-09T12:00:00.00">
+
+    <label>Month</label>
+    <input type="month">
+
+    <label>Week</label>
+    <input type="week">
+
+    <label>Email</label>
+    <input type="email">
+
+    <label>Tel</label>
+    <input type="tel">
+
+    <label>Search</label>
+    <input type="search">
+
+    <label>Number</label>
+    <input type="number" step="any">
+    <input type="number" pattern="[0-9]*" placeholder="Number type with number pattern">
+
+    <label>URL</label>
+    <input type="url">
+
+    <label>Range</label>
+    <input type="range">
+
+    <label>Color</label>
+    <input type="color">
+
+    <label>Pattern</label>
+    <input type="text" pattern="[0-9]*" placeholder="Text type with number pattern">
+
+    <label>Dropdown</label>
+    <select>
+      <option>Item 1</option>
+      <option>Item 2</option>
+      <option>Item 3</option>
+      <option>Item 4</option>
+      <option>Item 5</option>
+      <option>Item 6</option>
+    </select>
+
+    <label>Username Field w/ auto-capitalize off</label>
+    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+  </fieldset>
+</form>
             </div>
             <div class="markup">
               <pre>
     <code class="language-markup">
        <script type="text/plain" class="language-markup">
-        <form action="processing-script.php" method="get">
-      <fieldset>
-        <legend>Sample Form Fields</legend>
-        <label for="first-name">First Name</label>
-        <input type="input" id="first-name" name="first-name" required>
-        <label for="comments">Comments</label>
-        <textarea id="comments" name="comments"></textarea>
-        <label for="fav-car">Favorite Car Maker</label>
-        <select id="fav-car" name="fav-car">
-          <option value="F">Ford</option>
-          <option value="C">Chevy</option>
-          <option value="D">Dodge</option>
-          <option value="null" selected>---</option>
-        </select>
-        <input type="submit" value="Send">
-        <fieldset>
-          <legend>Select a maintenance drone:</legend>
-          <div>
-            <input type="radio" id="huey" name="drone" value="huey" checked>
-            <label for="huey">Huey</label>
-          </div>
-          <div>
-            <input type="radio" id="dewey" name="drone" value="dewey">
-            <label for="dewey">Dewey</label>
-          </div>
-          <div>
-            <input type="radio" id="louie" name="drone" value="louie">
-            <label for="louie">Louie</label>
-          </div>
-        </fieldset>
+       <form action="processing-script.php" method="get">
+  <fieldset>
+    <legend>Sample Form Fields</legend>
+    <label for="first-name">First Name</label>
+    <input type="input" id="first-name" name="first-name" required />
+    <label for="comments">Comments</label>
+    <textarea id="comments" name="comments"></textarea>
+    <label for="fav-car">Favorite Car Maker</label>
+    <select id="fav-car" name="fav-car">
+      <option value="F">Ford</option>
+      <option value="C">Chevy</option>
+      <option value="D">Dodge</option>
+      <option value="null" selected>---</option>
+    </select>
+    <input type="submit" value="Send" />
+    <fieldset>
+      <legend>Select a maintenance drone:</legend>
 
-      </fieldset>
-    </form>
+      <div>
+        <input type="radio" id="huey" name="drone" value="huey" checked />
+        <label for="huey">Huey</label>
+      </div>
+
+      <div>
+        <input type="radio" id="dewey" name="drone" value="dewey" />
+        <label for="dewey">Dewey</label>
+      </div>
+
+      <div>
+        <input type="radio" id="louie" name="drone" value="louie" />
+        <label for="louie">Louie</label>
+      </div>
+    </fieldset>
+  </fieldset>
+
+  <fieldset>
+    <legend>HTML5 Input Types</legend>
+
+    <label>Text</label>
+    <input type="text">
+
+    <label>Time</label>
+    <input type="time">
+
+    <label>Date</label>
+    <input type="date" min="2015-05-15" max="2015-05-25">
+
+    <label>Datetime</label>
+    <input type="datetime">
+
+    <label>Datetime-local</label>
+    <input type="datetime-local" min="2014-09-09T12:00:00.00">
+
+    <label>Month</label>
+    <input type="month">
+
+    <label>Week</label>
+    <input type="week">
+
+    <label>Email</label>
+    <input type="email">
+
+    <label>Tel</label>
+    <input type="tel">
+
+    <label>Search</label>
+    <input type="search">
+
+    <label>Number</label>
+    <input type="number" step="any">
+    <input type="number" pattern="[0-9]*" placeholder="Number type with number pattern">
+
+    <label>URL</label>
+    <input type="url">
+
+    <label>Range</label>
+    <input type="range">
+
+    <label>Color</label>
+    <input type="color">
+
+    <label>Pattern</label>
+    <input type="text" pattern="[0-9]*" placeholder="Text type with number pattern">
+
+    <label>Dropdown</label>
+    <select>
+      <option>Item 1</option>
+      <option>Item 2</option>
+      <option>Item 3</option>
+      <option>Item 4</option>
+      <option>Item 5</option>
+      <option>Item 6</option>
+    </select>
+
+    <label>Username Field w/ auto-capitalize off</label>
+    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+  </fieldset>
+</form>
        </script>
     </code>
     </pre>
