@@ -18,7 +18,7 @@
     <header class="primary container">
       <h1>Information Systems Analysis</h1>
     </header>
-    <main class="container">
+    <main>
       <section id="assignment">
         <article class="post">
           <header>
@@ -573,6 +573,69 @@ PageMaker including versions of <sub>Lorem</sub><sup>Ipsum</sup>.
   <aside>
   <figure>
   <figcaption>
+       </script>
+    </code>
+    </pre>
+            </div>
+          </section>
+                    <section id="buttons">
+            <p class="ele-ct">Element Count: 4</p>
+            <h2 class="section-heading">Buttons</h2>
+            <div class="output">
+ <!-- Target element for innerHTML -->
+  <p id="outputArea">This text will change when the innerHTML button is clicked.</p>
+
+  <!-- 1. innerHTML -->
+  <button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
+    Output using innerHTML
+  </button>
+
+  <br><br>
+
+  <!-- 2. document.write() -->
+  <button type="button" onclick="document.write('This text was written using document.write(). Note: It replaces the entire page content when used after loading.')">
+    Output using document.write()
+  </button>
+
+  <br><br>
+
+  <!-- 3. alert() -->
+  <button type="button" onclick="alert('This message is displayed using alert().')">
+    Output using alert()
+  </button>
+
+  <br><br>
+
+  <!-- 4. window.print() -->
+  <button type="button" onclick="window.print()">
+    Print this page using window.print()
+  </button>
+            </div>
+            <div class="markup">
+              <pre>
+    <code class="language-markup">
+       <script type="text/plain" class="language-markup">
+
+  <!-- 1. innerHTML -->
+  <button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
+    Output using innerHTML
+  </button>
+
+  <!-- 2. document.write() -->
+  <button type="button" onclick="document.write('This text was written using document.write()')">
+    Output using document.write()
+  </button>
+
+  <!-- 3. alert() -->
+  <button type="button" onclick="alert('This message is displayed using alert().')">
+    Output using alert()
+  </button>
+
+
+  <!-- 4. window.print() -->
+  <button type="button" onclick="window.print()">
+    Print this page using window.print()
+  </button>
        </script>
     </code>
     </pre>

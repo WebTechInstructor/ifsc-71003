@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Information Systems Analysis</title>
+  <meta name="color-scheme" content="dark" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/screen.css" />
+</head>
+
+<body class="dark">
+  <header class="primary container">
+    <h1>Information Systems Analysis</h1>
+  </header>
+  <main class="container">
+    <a href="../index.html" class="rth">Course Index</a>
+    <h2>Assignments</h2>
+    <section id="assignment">
+      <article class="post">
+        <header>
+          <h2>Module 5</h2>
+          <p class="due">Due: 2.24.2026</p>
+        </header>
+        <div class="question">
+          <p>
+            1. JavaScript Refer to the first JavaScript sandbox in the
+            JavaScript Tutorial at W3schools.com,
+            http://www.w3schools.com/js/default.asp
+          </p>
+          <ol class="alpha">
+            <li>
+              Explain the button HTML command, except for the JavaScript code
+              part.
+            </li>
+            <li>
+              Explain the meaning of onclick, which is an argument to the
+              button command.
+            </li>
+            <li>
+              Explain the JavaScript code assigned to the onclick argument.
+            </li>
+            <li>What does "demo" refer to?</li>
+            <li>What does the function getElementById() do?</li>
+            <li>What does innerHTML refer to?</li>
+            <li>What does the function Date() do?</li>
+          </ol>
+        </div>
+
+        <p>
+          <strong>A. Explain the button HTML command, except for the JavaScript code part.</strong>
+        </p>
+
+        <p>
+          The <code>&lt;button&gt;</code> element is a flexible, interactive control that users can click to trigger actions—such as submitting a form or running JavaScript—depending on its defined <code>type</code>.
+        </p>
+        <p>
+          <strong>B. Explain the meaning of onclick, which is an argument to the
+            button command.</strong>
+        </p>
+
+        <p>
+          <code>onclick</code> is an event handler attribute that executes JavaScript code when a user clicks on the element.
+        </p>
+        <p>
+          <strong>C. Explain the JavaScript code assigned to the onclick argument.</strong>
+        </p>
+        <p>
+          The JS assigned to the onclick event handler looks for an element with the id of demo and then sets the html content of that element to the current date/time using a built in date function.
+        </p>
+        <p><strong>D. What does "demo" refer to?</strong>
+        </p>
+        <p>
+          "demo" refers to the ID of a paragraph. The script looks for that ID and then injects html when a usern clicks on the button.
+        </p>
+        <strong>E. What does the function getElementById() do?</strong>
+        </p>
+        <p>
+          <code>getElementById()</code> is a DOM method that retrieves a single HTML element from the document based on its unique <code>id</code> attribute, allowing JavaScript to access and manipulate that specific element.
+        </p>
+
+        <strong>F. What does innerHTML refer to?</strong>
+        </p>
+        <p>
+          <code>innerHTML</code> is a DOM property that gets or sets the HTML content inside an element, allowing JavaScript to read, replace, or insert markup within that element.
+        </p>
+        <strong>G. What does the function Date() do?</strong>
+        </p>
+        <p>
+          The <code>Date()</code> function in JavaScript is used to create a date object representing a specific moment in time, allowing developers to retrieve or manipulate the current date and time or a defined date value.
+        </p>
+
+        <p class="question">
+          2. Consider the "JavaScript Where To" lesson, linked from "JS Where To." JavaScript may be placed within HTML tags. Let us call these code passages "scripts." Can a script be placed in an HTML head, body, neither, or both?
+        </p>
+
+        <p>
+          A script can be placed in either the HTML <code>&lt;head&gt;</code> or the
+          <code>&lt;body&gt;</code> section. It may be written inline within the page
+          or linked externally using the <code>&lt;script&gt;</code> tag. While scripts
+          can appear in both sections, larger external scripts are often placed just
+          before the closing <code>&lt;/body&gt;</code> tag to improve page loading performance.
+        </p>
+
+        <p class="question">
+          3a. Consider external JavaScript code. Why might code be placed in an external file file instead of in a web page?
+        </p>
+        <p>
+          By externalizing our scripts we can include and reuse them in multiple pages without having to maintain multiple versions of a script.
+        </p>
+        <p class="question">
+          3b. Consider external JavaScript code. Find the external code file myScript.js on the W3schools site. What is the URL of that file?
+        </p>
+        <p>
+          <code>https://www.w3schools.com/js/myScript.js</code>
+        </p>
+        <p class="question">
+          4a. At the end of your HTML test page, put 4 new buttons on it. One button demonstrates output to the innerHTML location of an HTML element. Another button demonstrates (when you click it) the document.write() output method. A third button demonstrates output using the alert() function. And a final button calls window.print(). Clearly indicate what each button is for, or you might not get credit for it.
+        </p>
+        <p>
+          <a href="html-reference.html#buttons" class="rth">Button Examples</a>
+        </p>
+        <p class="question">
+          4b. Consider output using console.log(). Explain what you see in the console, or provide a screen shot of the console containing a logged output.
+        </p>
+        <p>
+        <p>
+          When using <code>console.log()</code>, the output appears in the browser’s
+          Developer Tools console rather than on the web page itself. The logged message
+          is displayed as plain text or structured data and is primarily used for debugging
+          and inspecting code behavior during development.
+        </p>
+
+        <pre><code>
+// Example of writing to the console
+console.log("Hello, this is a message in the console.");
+
+let number = 42;
+console.log("The value of number is:", number);
+</code></pre>
+        </p>
+        <img src="../assets/img/console.png" alt="Console screenshot">
+        <script>
+          console.log("Hello, this is a message in the console.");
+          let number = 42;
+          console.log("The value of number is:", number);
+        </script>
+
+        <p class="question">
+          6a. Process mapping. Design a new website concept (don't build any actual page(s)) devoted to the sport of kabaddi. (If you don't like kabaddi, you can pick another one from the 10 listed at https://www.gq-magazine.co.uk/lifestyle/article/olympic-games-weirdest-events. )
+        </p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore porro magni ratione qui culpa reprehenderit in neque amet possimus sit, fugit maxime nisi? Repudiandae, odit!</p>
+  <p class="question">
+          6b. Make a DFD diagram for the key components. You may use a tool, or draw it on a piece of paper, then take a pic of it with your phone and upload it. The following type of item will not be counted as part of a DFD diagram.
+        </p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore porro magni ratione qui culpa reprehenderit in neque amet possimus sit, fugit maxime nisi? Repudiandae, odit!</p>
+  <p class="question">
+          6c. Make a second DFD for just one of the processes in the first diagram, showing its key components. You could continue this, analyzing one of the subprocesses in the second diagram by breaking it down, but that is not necessary as you probably understand this enough by now.
+        </p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore porro magni ratione qui culpa reprehenderit in neque amet possimus sit, fugit maxime nisi? Repudiandae, odit!</p>
+
+      </article>
+      <a href="../index.html" class="rth">Course Index</a>
+    </section>
+  </main>
+  <button class="toggle-btn" id="modeToggle">🌓</button>
+  <script src="../assets/js/scripts.js"></script>
+</body>
+
+</html>
