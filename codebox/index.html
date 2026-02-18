@@ -1,111 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeBox - Live Code Sandbox</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <header class="header">
-        <div class="header-left">
-            <h1 class="logo">
-                <span class="logo-icon">⚡</span>
-                <span class="logo-text">CodeBox</span>
-            </h1>
-            <div class="project-name" contenteditable="true" id="projectName">Untitled Project</div>
+      <div class="header-left">
+        <h1 class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">CodeBox</span>
+        </h1>
+        <div class="project-name" contenteditable="true" id="projectName">
+          Untitled Project
         </div>
-        <div class="header-right">
-            <button class="btn btn-secondary" id="formatBtn" title="Format code (Ctrl/Cmd + Shift + F)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 7h16M4 12h16M4 17h16"/>
-                </svg>
-                Format
-            </button>
-            <button class="btn btn-secondary" id="clearBtn" title="Clear all code">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                </svg>
-                Clear
-            </button>
-            <button class="btn btn-icon" id="themeToggle" title="Toggle theme">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <line x1="12" y1="1" x2="12" y2="3"/>
-                    <line x1="12" y1="21" x2="12" y2="23"/>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                    <line x1="1" y1="12" x2="3" y2="12"/>
-                    <line x1="21" y1="12" x2="23" y2="12"/>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                </svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-                </svg>
-            </button>
-        </div>
+      </div>
+      <div class="header-right">
+        <button
+          class="btn btn-secondary"
+          id="formatBtn"
+          title="Format code (Ctrl/Cmd + Shift + F)"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+          Format
+        </button>
+        <button class="btn btn-secondary" id="clearBtn" title="Clear all code">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"
+            />
+          </svg>
+          Clear
+        </button>
+        <button class="btn btn-icon" id="themeToggle" title="Toggle theme">
+          <svg
+            class="sun-icon"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg
+            class="moon-icon"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+      </div>
     </header>
 
     <main class="main">
-        <div class="editor-panel">
-            <div class="tabs">
-                <button class="tab active" data-lang="html">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.56l-6.94 3.64.26-7.73L0 7.96l7.19-.61L12 .5l4.81 6.85 7.19.61-5.32 5.51.26 7.73z"/>
-                    </svg>
-                    HTML
-                </button>
-                <button class="tab" data-lang="css">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.56l-6.94 3.64.26-7.73L0 7.96l7.19-.61L12 .5l4.81 6.85 7.19.61-5.32 5.51.26 7.73z"/>
-                    </svg>
-                    CSS
-                </button>
-                <button class="tab" data-lang="js">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.56l-6.94 3.64.26-7.73L0 7.96l7.19-.61L12 .5l4.81 6.85 7.19.61-5.32 5.51.26 7.73z"/>
-                    </svg>
-                    JavaScript
-                </button>
-            </div>
-            <div class="editor-container">
-                <textarea id="htmlEditor" class="editor active" spellcheck="false" placeholder="<!-- Write your HTML here -->"></textarea>
-                <textarea id="cssEditor" class="editor" spellcheck="false" placeholder="/* Write your CSS here */"></textarea>
-                <textarea id="jsEditor" class="editor" spellcheck="false" placeholder="// Write your JavaScript here"></textarea>
-            </div>
-        </div>
+      <div class="editor-panel">
+        <div class="tabs">
+          <button class="tab active" data-lang="html">
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 100 100"
+              fill="gold"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polygon
+                points="
+    50,5
+    57,28
+    80,18
+    65,40
+    90,50
+    65,60
+    80,82
+    57,72
+    50,95
+    43,72
+    20,82
+    35,60
+    10,50
+    35,40
+    20,18
+    43,28
+  "
+              />
+            </svg>
 
-        <div class="resize-handle" id="resizeHandle"></div>
-
-        <div class="preview-panel">
-            <div class="preview-header">
-                <span class="preview-title">Preview</span>
-                <button class="btn btn-icon btn-small" id="refreshBtn" title="Refresh preview">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 4v6h-6M1 20v-6h6"/>
-                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="preview-container">
-                <iframe id="preview" sandbox="allow-scripts allow-modals allow-forms allow-popups allow-same-origin" title="Preview window"></iframe>
-            </div>
-            <div class="console" id="console">
-                <div class="console-header">
-                    <span>Console</span>
-                    <button class="btn-clear-console" id="clearConsole">Clear</button>
-                </div>
-                <div class="console-content" id="consoleContent"></div>
-            </div>
+            HTML
+          </button>
+          <button class="tab" data-lang="css">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 17.56l-6.94 3.64.26-7.73L0 7.96l7.19-.61L12 .5l4.81 6.85 7.19.61-5.32 5.51.26 7.73z"
+              />
+            </svg>
+            CSS
+          </button>
+          <button class="tab" data-lang="js">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 17.56l-6.94 3.64.26-7.73L0 7.96l7.19-.61L12 .5l4.81 6.85 7.19.61-5.32 5.51.26 7.73z"
+              />
+            </svg>
+            JavaScript
+          </button>
         </div>
+        <div class="editor-container">
+          <textarea
+            id="htmlEditor"
+            class="editor active"
+            spellcheck="false"
+            placeholder="<!-- Information Systems Analysis Student - Write your HTML here -->"
+          ></textarea>
+          <textarea
+            id="cssEditor"
+            class="editor"
+            spellcheck="false"
+            placeholder="/* Information Systems Analysis Student - Write your CSS here */"
+          ></textarea>
+          <textarea
+            id="jsEditor"
+            class="editor"
+            spellcheck="false"
+            placeholder="// Information Systems Analysis Student - Write your JavaScript here"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="resize-handle" id="resizeHandle"></div>
+
+      <div class="preview-panel">
+        <div class="preview-header">
+          <span class="preview-title">Preview</span>
+          <button
+            class="btn btn-icon btn-small"
+            id="refreshBtn"
+            title="Refresh preview"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M23 4v6h-6M1 20v-6h6" />
+              <path
+                d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="preview-container">
+          <iframe
+            id="preview"
+            sandbox="allow-scripts allow-modals allow-forms allow-popups allow-same-origin"
+            title="Preview window"
+          ></iframe>
+        </div>
+        <div class="console" id="console">
+          <div class="console-header">
+            <span>Console</span>
+            <button class="btn-clear-console" id="clearConsole">Clear</button>
+          </div>
+          <div class="console-content" id="consoleContent"></div>
+        </div>
+      </div>
     </main>
 
     <div class="toast" id="toast"></div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
