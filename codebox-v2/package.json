@@ -1,0 +1,29 @@
+{
+  "name": "codebox",
+  "version": "1.0.0",
+  "description": "A brutalist-inspired live code sandbox with localStorage persistence",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/codebox.git"
+  },
+  "keywords": [
+    "code-sandbox",
+    "playground",
+    "html",
+    "css",
+    "javascript",
+    "live-preview",
+    "code-editor"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/codebox/issues"
+  },
+  "homepage": "https://github.com/yourusername/codebox#readme"
+}

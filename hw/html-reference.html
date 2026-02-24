@@ -22,9 +22,142 @@
       <section id="assignment">
         <article class="post">
           <header>
-            <h2>HTML Reference Document</h2>
+            <h2>HTML and JavaScript Reference Document</h2>
             <p class="due">HTML Element Count: 46</p>
-          </header>
+          </header>    
+          <section id="buttons">
+            <p class="ele-ct">Element Count: 10</p>
+            <h2 class="section-heading">Buttons with JavaScript</h2>
+            <div class="output">
+ <!-- Target element for innerHTML -->
+ <!-- 1. innerHTML -->
+<p id="outputTest">This text will change when the innerHTML button is clicked.</p>
+<button type="button" onclick="document.getElementById('outputTest').innerHTML = 'The innerHTML method has updated this paragraph.'">
+  Output using innerHTML
+</button>
+<br><br>
+<!-- 2. document.write() -->
+<button type="button" onclick="document.write('This text was written using document.write()')">
+  Output using document.write()
+</button>
+<br><br>
+<!-- 3. alert() -->
+<button type="button" onclick="alert('This message is displayed using alert().')">
+  Output using alert()
+</button>
+<br><br>
+
+<!-- 4. window.print() -->
+<button type="button" onclick="window.print()">
+  Print this page using window.print()
+</button>
+<br><br>
+<!-- 5. textContent -->
+<p id="textArea">This text can change.</p>
+<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
+  Change Text (textContent)
+</button>
+
+<br><br>
+
+<!-- 6. Change text color -->
+<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
+  Change Text Color
+</button>
+
+<br><br>
+
+<!-- 7. Change background color -->
+<button type="button" onclick="this.style.backgroundColor='lightgreen'">
+  Change Button Background
+</button>
+
+<br><br>
+
+<!-- 8. Display current date using Date() -->
+<p id="dateArea">Date will appear here.</p>
+<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
+  Show Current Date
+</button>
+
+<br><br>
+
+<!-- 9. Simple math operation -->
+<p id="mathArea">Math result will appear here.</p>
+<button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
+  Calculate 5 + 3
+</button>
+
+<br><br>
+
+<!-- 10. confirm() dialog -->
+<button type="button" onclick="confirm('Click OK or Cancel.')">
+  Show Confirm Box
+</button>
+            </div>
+            <div class="markup">
+              <pre>
+    <code class="language-markup">
+       <script type="text/plain" class="language-markup">
+
+<!-- 1. innerHTML -->
+<p id="outputArea">This text will change when the innerHTML button is clicked.</p>
+<button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
+  Output using innerHTML
+</button>
+
+<!-- 2. document.write() -->
+<button type="button" onclick="document.write('This text was written using document.write()')">
+  Output using document.write()
+</button>
+
+<!-- 3. alert() -->
+<button type="button" onclick="alert('This message is displayed using alert().')">
+  Output using alert()
+</button>
+
+<!-- 4. window.print() -->
+<button type="button" onclick="window.print()">
+  Print this page using window.print()
+</button>
+
+<!-- 5. textContent -->
+<p id="textArea">This text can change.</p>
+<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
+  Change Text (textContent)
+</button>
+
+<!-- 6. Change text color -->
+<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
+  Change Text Color
+</button>
+
+<!-- 7. Change background color -->
+<button type="button" onclick="this.style.backgroundColor='lightgreen'">
+  Change Button Background
+</button>
+
+<!-- 8. Display current date using Date() -->
+<p id="dateArea">Date will appear here.</p>
+<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
+  Show Current Date
+</button>
+
+<!-- 9. Simple math operation -->
+<p id="mathArea">Math result will appear here.</p>
+<button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
+  Calculate 5 + 3
+</button>
+
+<!-- 10. confirm() dialog -->
+<button type="button" onclick="confirm('Click OK or Cancel.')">
+  Show Confirm Box
+</button>
+       </script>
+    </code>
+    </pre>
+            </div>
+          </section>
           <section id="headings">
             <p class="ele-ct">Element Count: 6</p>
             <h2 class="section-heading">Headings</h2>
@@ -573,69 +706,6 @@ PageMaker including versions of <sub>Lorem</sub><sup>Ipsum</sup>.
   <aside>
   <figure>
   <figcaption>
-       </script>
-    </code>
-    </pre>
-            </div>
-          </section>
-                    <section id="buttons">
-            <p class="ele-ct">Element Count: 4</p>
-            <h2 class="section-heading">Buttons</h2>
-            <div class="output">
- <!-- Target element for innerHTML -->
-  <p id="outputArea">This text will change when the innerHTML button is clicked.</p>
-
-  <!-- 1. innerHTML -->
-  <button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
-    Output using innerHTML
-  </button>
-
-  <br><br>
-
-  <!-- 2. document.write() -->
-  <button type="button" onclick="document.write('This text was written using document.write(). Note: It replaces the entire page content when used after loading.')">
-    Output using document.write()
-  </button>
-
-  <br><br>
-
-  <!-- 3. alert() -->
-  <button type="button" onclick="alert('This message is displayed using alert().')">
-    Output using alert()
-  </button>
-
-  <br><br>
-
-  <!-- 4. window.print() -->
-  <button type="button" onclick="window.print()">
-    Print this page using window.print()
-  </button>
-            </div>
-            <div class="markup">
-              <pre>
-    <code class="language-markup">
-       <script type="text/plain" class="language-markup">
-
-  <!-- 1. innerHTML -->
-  <button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
-    Output using innerHTML
-  </button>
-
-  <!-- 2. document.write() -->
-  <button type="button" onclick="document.write('This text was written using document.write()')">
-    Output using document.write()
-  </button>
-
-  <!-- 3. alert() -->
-  <button type="button" onclick="alert('This message is displayed using alert().')">
-    Output using alert()
-  </button>
-
-
-  <!-- 4. window.print() -->
-  <button type="button" onclick="window.print()">
-    Print this page using window.print()
-  </button>
        </script>
     </code>
     </pre>
