@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RefLoop — Referral Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0f11;
+    --surface: #161719;
+    --surface2: #1e2023;
+    --border: #2a2c30;
+    --text: #e8e9eb;
+    --muted: #6b6f78;
+    --accent: #f0a500;
+    --accent-dim: rgba(240,165,0,0.12);
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --blue: #4a9eff;
+    --purple: #9b59b6;
+    --hot: #ff4444;
+    --warm: #ff8c00;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .logo-sub {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+
+  .user-switcher {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .user-switcher label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .user-switcher select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    appearance: none;
+  }
+  .user-role {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .nav {
+    padding: 16px 0;
+    flex: 1;
+  }
+  .nav-item {
+    padding: 9px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item.active, .nav-item:hover {
+    color: var(--text);
+    background: var(--surface2);
+  }
+  .nav-item.active { border-left-color: var(--accent); color: var(--accent); }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--accent);
+    color: #000;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .topbar {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .page-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    padding: 7px 14px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #fdb900; }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(231,76,60,0.15); color: var(--red); border: 1px solid rgba(231,76,60,0.3); }
+  .btn-danger:hover { background: rgba(231,76,60,0.25); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  /* CONTENT */
+  .content {
+    padding: 24px 28px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); }
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 600;
+    margin-top: 4px;
+    line-height: 1;
+  }
+  .stat-card.s-new .stat-value { color: var(--blue); }
+  .stat-card.s-active .stat-value { color: var(--accent); }
+  .stat-card.s-sent .stat-value { color: var(--green); }
+  .stat-card.s-escalated .stat-value { color: var(--red); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* REFERRAL CARDS */
+  .referral-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .referral-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .referral-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .referral-card.age-fresh::before { background: var(--blue); }
+  .referral-card.age-warm::before { background: var(--warm); }
+  .referral-card.age-hot::before { background: var(--hot); box-shadow: 0 0 8px var(--hot); }
+  .referral-card.age-escalated::before { background: var(--red); animation: pulse-red 1.5s infinite; }
+
+  @keyframes pulse-red {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--red); }
+    50% { opacity: 0.5; box-shadow: 0 0 14px var(--red); }
+  }
+
+  .referral-card:hover { border-color: #3a3d45; }
+
+  .ref-client { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .ref-meta {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .ref-meta span { display: flex; align-items: center; gap: 4px; }
+  .ref-note {
+    font-size: 12px;
+    color: #9a9ea8;
+    font-style: italic;
+    border-left: 2px solid var(--border);
+    padding-left: 10px;
+    margin-top: 6px;
+  }
+  .ref-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+
+  .status-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .status-new { background: rgba(74,158,255,0.15); color: var(--blue); border: 1px solid rgba(74,158,255,0.3); }
+  .status-assigned { background: rgba(240,165,0,0.15); color: var(--accent); border: 1px solid rgba(240,165,0,0.3); }
+  .status-accepted { background: rgba(155,89,182,0.15); color: var(--purple); border: 1px solid rgba(155,89,182,0.3); }
+  .status-proposal_sent { background: rgba(46,204,113,0.15); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+  .status-escalated { background: rgba(231,76,60,0.15); color: var(--red); border: 1px solid rgba(231,76,60,0.3); }
+
+  .age-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .age-tag.hot { color: var(--warm); }
+  .age-tag.burning { color: var(--hot); font-weight: 600; }
+
+  /* ASSIGN DROPDOWN */
+  .assign-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 130px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    width: 460px;
+    max-width: 90vw;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .form-group textarea { min-height: 80px; resize: vertical; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* ACTIVITY LOG */
+  .activity-log { margin-top: 28px; }
+  .log-entry {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    align-items: flex-start;
+  }
+  .log-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-top: 1px;
+    min-width: 60px;
+  }
+  .log-text { color: #a0a5b0; }
+  .log-text strong { color: var(--text); font-weight: 500; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-state p { font-size: 13px; }
+
+  /* TOAST */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 200;
+  }
+  .toast {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    animation: fadeInRight 0.25s ease;
+    max-width: 300px;
+  }
+  .toast.success { border-left-color: var(--green); }
+  .toast.error { border-left-color: var(--red); }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">RefLoop</div>
+    <div class="logo-sub">Referral Management</div>
+  </div>
+  <div class="user-switcher">
+    <label>Active User</label>
+    <select id="userSelect" onchange="switchUser()">
+      <option value="alice">Alice Chen</option>
+      <option value="bob">Bob Marsh</option>
+      <option value="carol">Carol Diaz</option>
+      <option value="manager">Dana Park (Manager)</option>
+    </select>
+    <div class="user-role" id="userRoleLabel">Sales Rep</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="showView('dashboard')">
+      <span>▦</span> Dashboard
+      <span class="nav-badge" id="newBadge">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('my-referrals')">
+      <span>◈</span> My Referrals
+    </div>
+    <div class="nav-item" onclick="showView('activity')">
+      <span>◎</span> Activity Log
+    </div>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn btn-danger btn-sm" onclick="simulateTimeout()" title="Simulate unassigned referral timeout → escalate to manager">⚡ Simulate Timeout</button>
+      <button class="btn btn-primary" onclick="openNewReferralModal()">+ New Referral</button>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+    <!-- Rendered by JS -->
+  </div>
+</main>
+
+<!-- NEW REFERRAL MODAL -->
+<div class="modal-overlay" id="newReferralModal">
+  <div class="modal">
+    <h2>New Client Referral</h2>
+    <div class="form-group">
+      <label>Client Name</label>
+      <input type="text" id="f-name" placeholder="e.g. Acme Corp / Jane Smith">
+    </div>
+    <div class="form-group">
+      <label>Contact Email</label>
+      <input type="email" id="f-email" placeholder="client@example.com">
+    </div>
+    <div class="form-group">
+      <label>Request Type</label>
+      <select id="f-type">
+        <option value="Proposal">Sales Proposal</option>
+        <option value="Discovery Call">Discovery Call</option>
+        <option value="Product Demo">Product Demo</option>
+        <option value="Pricing Inquiry">Pricing Inquiry</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="f-notes" placeholder="Any context about this lead..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('newReferralModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createReferral()">Submit Referral</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-overlay" id="assignModal">
+  <div class="modal">
+    <h2>Assign Referral</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:18px;" id="assignRefLabel"></p>
+    <div class="form-group">
+      <label>Assign To</label>
+      <select id="assignTarget">
+        <option value="alice">Alice Chen</option>
+        <option value="bob">Bob Marsh</option>
+        <option value="carol">Carol Diaz</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('assignModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAssign()">Assign</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const USERS = {
+  alice:   { name: 'Alice Chen',   role: 'Sales Rep' },
+  bob:     { name: 'Bob Marsh',    role: 'Sales Rep' },
+  carol:   { name: 'Carol Diaz',   role: 'Sales Rep' },
+  manager: { name: 'Dana Park',    role: 'Sales Manager' },
+};
+
+let currentUser = 'alice';
+let currentView = 'dashboard';
+let assigningId = null;
+
+function getState() {
+  return JSON.parse(localStorage.getItem('refloop_state') || 'null') || { referrals: [], log: [] };
+}
+
+function saveState(state) {
+  localStorage.setItem('refloop_state', JSON.stringify(state));
+}
+
+function newId() {
+  return 'ref_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+}
+
+// ─── BOOTSTRAP ───────────────────────────────────────────────────────────────
+
+(function init() {
+  let state = getState();
+  if (state.referrals.length === 0) {
+    // Seed demo data
+    const now = Date.now();
+    state.referrals = [
+      { id: newId(), client: 'Northstar Logistics', email: 'team@northstar.io', type: 'Proposal', notes: 'Interested in enterprise plan. Spoke briefly at conference.', status: 'new', createdAt: now - 1000*60*60*5, createdBy: 'alice', assignedTo: null, acceptedBy: null },
+      { id: newId(), client: 'Bloom & Co', email: 'hello@bloom.co', type: 'Discovery Call', notes: 'Warm lead from referral partner.', status: 'assigned', createdAt: now - 1000*60*60*28, createdBy: 'bob', assignedTo: 'carol', acceptedBy: null },
+      { id: newId(), client: 'Redwood Partners', email: 'p.kim@redwood.com', type: 'Pricing Inquiry', notes: '', status: 'accepted', createdAt: now - 1000*60*60*48, createdBy: 'carol', assignedTo: 'alice', acceptedBy: 'alice' },
+      { id: newId(), client: 'Vertex Systems', email: 'sales@vertex.io', type: 'Product Demo', notes: 'Specifically asked about the API tier.', status: 'proposal_sent', createdAt: now - 1000*60*60*72, createdBy: 'alice', assignedTo: 'bob', acceptedBy: 'bob' },
+    ];
+    state.log = [
+      { time: now - 1000*60*20, text: '<strong>Alice Chen</strong> created referral for <strong>Northstar Logistics</strong>' },
+      { time: now - 1000*60*60*4, text: '<strong>Bob Marsh</strong> assigned <strong>Bloom & Co</strong> to Carol Diaz' },
+      { time: now - 1000*60*60*10, text: '<strong>Alice Chen</strong> accepted referral for <strong>Redwood Partners</strong>' },
+      { time: now - 1000*60*60*24, text: '<strong>Bob Marsh</strong> sent proposal for <strong>Vertex Systems</strong>' },
+    ];
+    saveState(state);
+  }
+  render();
+})();
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+function render() {
+  updateBadge();
+  if (currentView === 'dashboard') renderDashboard();
+  else if (currentView === 'my-referrals') renderMyReferrals();
+  else if (currentView === 'activity') renderActivity();
+}
+
+function updateBadge() {
+  const state = getState();
+  const newCount = state.referrals.filter(r => r.status === 'new').length;
+  document.getElementById('newBadge').textContent = newCount;
+}
+
+function renderDashboard() {
+  const state = getState();
+  const refs = state.referrals;
+  const counts = {
+    new: refs.filter(r=>r.status==='new').length,
+    active: refs.filter(r=>['assigned','accepted'].includes(r.status)).length,
+    sent: refs.filter(r=>r.status==='proposal_sent').length,
+    escalated: refs.filter(r=>r.status==='escalated').length,
+  };
+
+  const list = refs.filter(r => r.status !== 'proposal_sent');
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="stats-row">
+      <div class="stat-card s-new">
+        <div class="stat-label">New Requests</div>
+        <div class="stat-value">${counts.new}</div>
+      </div>
+      <div class="stat-card s-active">
+        <div class="stat-label">In Progress</div>
+        <div class="stat-value">${counts.active}</div>
+      </div>
+      <div class="stat-card s-sent">
+        <div class="stat-label">Proposals Sent</div>
+        <div class="stat-value">${counts.sent}</div>
+      </div>
+      <div class="stat-card s-escalated">
+        <div class="stat-label">Escalated</div>
+        <div class="stat-value">${counts.escalated}</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Active Referrals</div>
+    </div>
+
+    <div class="referral-list">
+      ${list.length === 0 ? `<div class="empty-state"><div class="empty-icon">◈</div><p>No active referrals. Create one to get started.</p></div>` :
+        list.map(r => renderCard(r)).join('')}
+    </div>
+
+    <div class="section-header" style="margin-top:28px">
+      <div class="section-title">Completed</div>
+    </div>
+    <div class="referral-list">
+      ${refs.filter(r=>r.status==='proposal_sent').length === 0 ? `<div style="color:var(--muted);font-size:13px;padding:10px 0">No completed referrals yet.</div>` :
+        refs.filter(r=>r.status==='proposal_sent').map(r => renderCard(r)).join('')}
+    </div>
+  `;
+}
+
+function renderMyReferrals() {
+  const state = getState();
+  const mine = state.referrals.filter(r =>
+    r.createdBy === currentUser || r.assignedTo === currentUser || r.acceptedBy === currentUser
+  );
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="section-header">
+      <div class="section-title">My Referrals — ${USERS[currentUser].name}</div>
+    </div>
+    <div class="referral-list">
+      ${mine.length === 0 ?
+        `<div class="empty-state"><div class="empty-icon">◈</div><p>You have no referrals yet.</p></div>` :
+        mine.map(r => renderCard(r)).join('')}
+    </div>
+  `;
+}
+
+function renderActivity() {
+  const state = getState();
+  const log = [...state.log].reverse();
+  document.getElementById('mainContent').innerHTML = `
+    <div class="section-header">
+      <div class="section-title">Activity Log</div>
+    </div>
+    <div class="activity-log">
+      ${log.length === 0 ? '<div style="color:var(--muted);font-size:13px">No activity yet.</div>' :
+        log.map(e => `
+          <div class="log-entry">
+            <div class="log-time">${timeAgo(e.time)}</div>
+            <div class="log-text">${e.text}</div>
+          </div>
+        `).join('')}
+    </div>
+  `;
+}
+
+function renderCard(r) {
+  const age = ageClass(r.createdAt, r.status);
+  const ageLabel = ageLabel_(r.createdAt, r.status);
+  const u = USERS[currentUser];
+  const isManager = u.role === 'Sales Manager';
+  const actions = buildActions(r, isManager);
+
+  const assignedLabel = r.assignedTo ? `→ ${USERS[r.assignedTo]?.name || r.assignedTo}` : '';
+  const createdByLabel = USERS[r.createdBy]?.name || r.createdBy;
+
+  return `
+    <div class="referral-card age-${age}" id="card-${r.id}">
+      <div>
+        <div class="ref-client">${r.client}</div>
+        <div class="ref-meta">
+          <span>✉ ${r.email}</span>
+          <span>◈ ${r.type}</span>
+          <span style="color:var(--muted)">by ${createdByLabel}</span>
+          ${assignedLabel ? `<span style="color:var(--accent)">${assignedLabel}</span>` : ''}
+        </div>
+        ${r.notes ? `<div class="ref-note">${r.notes}</div>` : ''}
+      </div>
+      <div class="ref-actions">
+        <span class="status-badge status-${r.status}">${statusLabel(r.status)}</span>
+        <span class="age-tag ${age === 'hot' ? 'hot' : age === 'warm' ? 'burning' : ''}">${ageLabel}</span>
+        ${actions}
+      </div>
+    </div>
+  `;
+}
+
+function buildActions(r, isManager) {
+  const parts = [];
+
+  // New → assign
+  if (r.status === 'new') {
+    if (currentUser !== r.createdBy || isManager) {
+      parts.push(`<button class="btn btn-ghost btn-sm" onclick="openAssignModal('${r.id}')">Assign</button>`);
+    }
+    parts.push(`<button class="btn btn-ghost btn-sm" onclick="selfAssign('${r.id}')">Take It</button>`);
+  }
+
+  // Assigned → accept (only the assigned person)
+  if (r.status === 'assigned' && r.assignedTo === currentUser) {
+    parts.push(`<button class="btn btn-primary btn-sm" onclick="acceptReferral('${r.id}')">Accept</button>`);
+  }
+
+  // Assigned → reassign (manager or creator)
+  if (r.status === 'assigned' && (isManager || r.createdBy === currentUser)) {
+    parts.push(`<button class="btn btn-ghost btn-sm" onclick="openAssignModal('${r.id}')">Reassign</button>`);
+  }
+
+  // Accepted → send proposal
+  if (r.status === 'accepted' && r.acceptedBy === currentUser) {
+    parts.push(`<button class="btn btn-primary btn-sm" onclick="sendProposal('${r.id}')">Send Proposal</button>`);
+  }
+
+  // Escalated → manager can assign
+  if (r.status === 'escalated' && isManager) {
+    parts.push(`<button class="btn btn-danger btn-sm" onclick="openAssignModal('${r.id}')">Delegate</button>`);
+  }
+
+  return parts.join('');
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+
+function createReferral() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const type = document.getElementById('f-type').value;
+  const notes = document.getElementById('f-notes').value.trim();
+
+  if (!name || !email) { toast('Client name and email required.', 'error'); return; }
+
+  const state = getState();
+  const r = {
+    id: newId(),
+    client: name, email, type, notes,
+    status: 'new',
+    createdAt: Date.now(),
+    createdBy: currentUser,
+    assignedTo: null,
+    acceptedBy: null,
+  };
+  state.referrals.unshift(r);
+  addLog(state, `<strong>${USERS[currentUser].name}</strong> created referral for <strong>${name}</strong>`);
+  saveState(state);
+  closeModal('newReferralModal');
+  clearForm();
+  toast(`Referral for ${name} created.`, 'success');
+  render();
+}
+
+function openAssignModal(id) {
+  assigningId = id;
+  const state = getState();
+  const r = state.referrals.find(x => x.id === id);
+  document.getElementById('assignRefLabel').textContent = `Client: ${r.client}`;
+  // Remove current user from options
+  const sel = document.getElementById('assignTarget');
+  Array.from(sel.options).forEach(o => {
+    o.disabled = (o.value === currentUser);
+    o.selected = (o.value !== currentUser && !o.disabled);
+  });
+  // Select first non-disabled
+  const first = Array.from(sel.options).find(o => !o.disabled);
+  if (first) first.selected = true;
+  document.getElementById('assignModal').classList.add('open');
+}
+
+function confirmAssign() {
+  const target = document.getElementById('assignTarget').value;
+  const state = getState();
+  const r = state.referrals.find(x => x.id === assigningId);
+  r.assignedTo = target;
+  r.status = 'assigned';
+  addLog(state, `<strong>${USERS[currentUser].name}</strong> assigned <strong>${r.client}</strong> to ${USERS[target].name}`);
+  saveState(state);
+  closeModal('assignModal');
+  toast(`Assigned to ${USERS[target].name}`, 'success');
+  assigningId = null;
+  render();
+}
+
+function selfAssign(id) {
+  const state = getState();
+  const r = state.referrals.find(x => x.id === id);
+  r.assignedTo = currentUser;
+  r.acceptedBy = currentUser;
+  r.status = 'accepted';
+  addLog(state, `<strong>${USERS[currentUser].name}</strong> self-assigned and accepted <strong>${r.client}</strong>`);
+  saveState(state);
+  toast(`You accepted ${r.client}`, 'success');
+  render();
+}
+
+function acceptReferral(id) {
+  const state = getState();
+  const r = state.referrals.find(x => x.id === id);
+  r.acceptedBy = currentUser;
+  r.status = 'accepted';
+  addLog(state, `<strong>${USERS[currentUser].name}</strong> accepted referral for <strong>${r.client}</strong> and is initiating contact`);
+  saveState(state);
+  toast(`Referral accepted. Begin client contact.`, 'success');
+  render();
+}
+
+function sendProposal(id) {
+  const state = getState();
+  const r = state.referrals.find(x => x.id === id);
+  r.status = 'proposal_sent';
+  addLog(state, `<strong>${USERS[currentUser].name}</strong> sent proposal to <strong>${r.client}</strong> — referral closed ✓`);
+  saveState(state);
+  toast(`Proposal sent to ${r.client}. Loop closed!`, 'success');
+  render();
+}
+
+function simulateTimeout() {
+  const state = getState();
+  const eligible = state.referrals.filter(r => r.status === 'new');
+  if (eligible.length === 0) {
+    toast('No unassigned referrals to escalate.', 'error');
+    return;
+  }
+  const r = eligible[0];
+  r.status = 'escalated';
+  addLog(state, `⚡ <strong>TIMEOUT</strong> — <strong>${r.client}</strong> unassigned too long → escalated to <strong>Dana Park (Manager)</strong>`);
+  saveState(state);
+  toast(`${r.client} escalated to manager.`, 'error');
+  render();
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+
+function switchUser() {
+  currentUser = document.getElementById('userSelect').value;
+  document.getElementById('userRoleLabel').textContent = USERS[currentUser].role;
+  render();
+}
+
+function showView(v) {
+  currentView = v;
+  const titles = { dashboard: 'Dashboard', 'my-referrals': 'My Referrals', activity: 'Activity Log' };
+  document.getElementById('pageTitle').textContent = titles[v];
+  document.querySelectorAll('.nav-item').forEach((el, i) => {
+    el.classList.toggle('active', ['dashboard','my-referrals','activity'][i] === v);
+  });
+  render();
+}
+
+function openNewReferralModal() {
+  document.getElementById('newReferralModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function clearForm() {
+  ['f-name','f-email','f-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-type').selectedIndex = 0;
+}
+
+function addLog(state, text) {
+  state.log.push({ time: Date.now(), text });
+}
+
+function statusLabel(s) {
+  return { new:'New', assigned:'Assigned', accepted:'In Contact', proposal_sent:'Proposal Sent', escalated:'Escalated' }[s] || s;
+}
+
+function ageClass(ts, status) {
+  if (status === 'escalated') return 'escalated';
+  if (status === 'proposal_sent') return 'fresh';
+  const hrs = (Date.now() - ts) / 3600000;
+  if (hrs < 8) return 'fresh';
+  if (hrs < 24) return 'warm';
+  return 'hot';
+}
+
+function ageLabel_(ts, status) {
+  if (status === 'proposal_sent') return 'Closed';
+  const hrs = (Date.now() - ts) / 3600000;
+  if (hrs < 1) return `${Math.round(hrs*60)}m ago`;
+  if (hrs < 24) return `${Math.round(hrs)}h ago`;
+  return `${Math.round(hrs/24)}d ago`;
+}
+
+function timeAgo(ts) {
+  const mins = Math.round((Date.now() - ts) / 60000);
+  if (mins < 1) return 'now';
+  if (mins < 60) return `${mins}m`;
+  if (mins < 1440) return `${Math.round(mins/60)}h`;
+  return `${Math.round(mins/1440)}d`;
+}
+
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
