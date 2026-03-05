@@ -254,3 +254,10 @@ pre[class*="language-"] {
 .token.entity {
   cursor: help;
 }
+ button{
+  display:block;
+  margin-bottom:20px;
+  padding:5px; 
+  border-radius:5px;
+
+ }

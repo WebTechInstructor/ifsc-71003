@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Information Systems Analysis</title>
+    <meta name="color-scheme" content="dark" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/screen.css" />
+  </head>
+  <body class="dark">
+    <header class="primary container">
+      <h1>Information Systems Analysis</h1>
+    </header>
+    <main class="container">
+      <a href="../index.html" class="rth">Course Index</a>
+      <h2>Assignments</h2>
+      <section id="assignment">
+        <article class="post">
+          <header>
+            <h2>Module 7</h2>
+            <p class="due">Due: 3.12.2026</p>
+          </header>
+          <p class="question">
+            1. Write an approximately 4,000 word paper comparing Gantt charts
+            and PERT diagrams. Use AI to help. You can count words by pasting it
+            into MS Word and it should show the word count in the lower left
+            corner of the window. The result should be well structured, with
+            numbered section, subsection, and if appropriate sub-subsection or
+            deeper headings, and have a table of contents showing the headings
+            and their numbers. It is not necessary to have links from the table
+            of contents to the corresponding sections, but this might be added
+            to this question next year.
+          </p>
+          <p>
+            <a href="../assets/pdf/gannt-vs-pert.docx">
+              A Comparative Analysis of Scheduling Methodologies in Information
+              Systems Project Management: Gantt Charts and PERT Diagrams
+            </a>
+          </p>
+          <p>
+            One of the most insightful parts of this assignment was watching how
+            different AI models struggled with the sheer scale of a 4,000-word
+            requirement. It exposed a common weakness in generative AI: the
+            tendency to 'compress' complex ideas once the document gets long. I
+            noticed that ChatGPT would often claim it had hit the word count
+            while only providing about half of what was asked. It was aware of
+            the goal, but couldn't quite bridge the gap. Gemini was the standout
+            here, proving it could actually sustain a deep, technical narrative
+            for the duration of the project. It really highlighted that for
+            long-form academic work, 'length hallucination' is a hurdle we still
+            have to actively audit.
+          </p>
+          <p class="question">
+            2. Answer this question only if you have an opinion about it,
+            otherwise just say you have no opinion on it. Suppose a HW required
+            you to make and submit a short cat video. What
+            product/method/service/process would you choose?
+          </p>
+          <p>
+            While I don't have a favorite tool for this purpose, I have seen
+            promise in <a href="https://clipchamp.com/en/">ClipChamp</a>. It is
+            a cloud based video editor operated by Microsoft with copilot
+            integration. As a demo, I create the following video with this
+            prompt "Create a 20-30 Second video on why clipchamp is the best
+            choice for students needing to create short form video assignments
+            with minimal technical knowledge." Here is the result:
+            <a
+              href="https://univarkansaslittlerock-my.sharepoint.com/:v:/g/personal/tswallace_ualr_edu/IQDRMNuxxJzWQYI7oG2BIBpHAb4JrdDcMGY0cuzXxm5yUqo?e=XtA9pO"
+              >Video (Requires UALR Login)</a
+            >
+          </p>
+          <p class="question">
+            3. Make an improvement to your sandbox, using AI. Then, tweak
+            something (it can be a small thing) yourself. Explain what you did
+            as the answer to this question.
+          </p>
+          <p>
+            <a href="../codebox-v2/" class="rth">Refactored Code Sandbox</a>
+          </p>
+          <p>
+            After making improvements to my sandbox for homework 6, I noticed
+            that I was seeing some of the underlying code in the preview window.
+            Working with Claud, I identified the issue and updated the
+            <code>UpdatePreview()</code> function to address this issue. I also
+            increased the size of the logo manually by adjusting the CSS.
+          </p>
+          <p class="question">
+            4. For your HTML and JavaScript demo page, add one more button
+            demonstrating a JavaScript operator. Alphabetize the JavaScript
+            section by what is on the buttons. Make sure the HTML section is
+            alphabetized as well. Give a link to it as the answer to this
+            question.
+          </p>
+          <p>
+            <a href="html-reference.html#buttons" class="rth"
+              >Button Examples</a
+            >
+          </p>
+          <p class="question">
+            5. Consider the use cases developed in the previous HW. Make a
+            hand-drawn Gantt or PERT chart for developing the project. Take a
+            snapshot of the hand-drawn diagram and upload it to your website so
+            you can include it in your HW.
+          </p>
+          <img src="../assets/img/handdrawn-pert.jpg" alt="Pert Chart" />
+          <p class="question">
+            6. Referring to the previous question, you already have a home page
+            from the previous HW for a system based on the use cases of the
+            previous HW. Add 2-3 more pages and link to them from the home page
+            of the system. You can use AI to help. Include use of both HTML and
+            JavaScript. In your HW statement provide a link to the system's home
+            page (that might be obvious, but we mention it anyway). Also in your
+            HW statement include a screenshot of you interacting with an AI to
+            better understand how a JavaScript passage in your website works.
+          </p>
+          <p>
+            I added a new route in the app to display step by step instructions
+            and added a link in the footer to a privacy policy.
+          </p>
+          <img
+            src="../assets/img/use-case-app-ai-interaction.png"
+            alt="Screenshot"
+          />
+          <a href="../use-case-demo/referral-dashboard.html" class="rth"
+            >Revised app with additions</a
+          >
+        </article>
+        <a href="../index.html" class="rth">Course Index</a>
+      </section>
+    </main>
+    <button class="toggle-btn" id="modeToggle">🌓</button>
+    <script src="../assets/js/scripts.js"></script>
+  </body>
+</html>

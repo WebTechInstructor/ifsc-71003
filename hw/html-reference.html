@@ -23,74 +23,70 @@
         <article class="post">
           <header>
             <h2>HTML and JavaScript Reference Document</h2>
-            <p class="due">HTML Element Count: 46</p>
+            <p class="due">HTML Element Count: 47</p>
           </header>    
           <section id="buttons">
-            <p class="ele-ct">Element Count: 10</p>
+            <p class="ele-ct">Element Count: 11</p>
             <h2 class="section-heading">Buttons with JavaScript</h2>
             <div class="output">
- <!-- Target element for innerHTML -->
- <!-- 1. innerHTML -->
-<p id="outputTest">This text will change when the innerHTML button is clicked.</p>
-<button type="button" onclick="document.getElementById('outputTest').innerHTML = 'The innerHTML method has updated this paragraph.'">
-  Output using innerHTML
-</button>
-<br><br>
-<!-- 2. document.write() -->
-<button type="button" onclick="document.write('This text was written using document.write()')">
-  Output using document.write()
-</button>
-<br><br>
-<!-- 3. alert() -->
-<button type="button" onclick="alert('This message is displayed using alert().')">
-  Output using alert()
-</button>
-<br><br>
-
-<!-- 4. window.print() -->
-<button type="button" onclick="window.print()">
-  Print this page using window.print()
-</button>
-<br><br>
-<!-- 5. textContent -->
-<p id="textArea">This text can change.</p>
-<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
-  Change Text (textContent)
+<!-- 1. JS Operator Example -->
+<p id="mathArea1">Math result will appear here.</p>
+<button type="button" onclick="document.getElementById('mathArea1').textContent=7*13">
+  Calculate 7 * 13
 </button>
 
-<br><br>
-
-<!-- 6. Change text color -->
-<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
-  Change Text Color
-</button>
-
-<br><br>
-
-<!-- 7. Change background color -->
-<button type="button" onclick="this.style.backgroundColor='lightgreen'">
-  Change Button Background
-</button>
-
-<br><br>
-
-<!-- 8. Display current date using Date() -->
-<p id="dateArea">Date will appear here.</p>
-<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
-  Show Current Date
-</button>
-
-<br><br>
-
-<!-- 9. Simple math operation -->
+<!-- 2. Simple math operation -->
 <p id="mathArea">Math result will appear here.</p>
 <button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
   Calculate 5 + 3
 </button>
 
-<br><br>
+<!-- 3. textContent -->
+<p id="textArea">This text can change.</p>
+<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
+  Change Text (textContent)
+</button>
 
-<!-- 10. confirm() dialog -->
+<!-- 4. Change text color -->
+<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
+  Change Text Color
+</button>
+
+<!-- 5. Change background color -->
+<button type="button" onclick="this.style.backgroundColor='lightgreen'">
+  Change Button Background
+</button>
+
+<!-- 6. window.print() -->
+<button type="button" onclick="window.print()">
+  Print this page using window.print()
+</button>
+
+
+<!-- 7. innerHTML -->
+<p id="outputArea">This text will change when the innerHTML button is clicked.</p>
+<button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
+  Output using innerHTML
+</button>
+
+<!-- 8. document.write() -->
+<button type="button" onclick="document.write('This text was written using document.write()')">
+  Output using document.write()
+</button>
+
+<!-- 9. alert() -->
+<button type="button" onclick="alert('This message is displayed using alert().')">
+  Output using alert()
+</button>
+
+<!-- 10. Display current date using Date() -->
+<p id="dateArea">Date will appear here.</p>
+<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
+  Show Current Date
+</button>
+
+
+<!-- 11. confirm() dialog -->
 <button type="button" onclick="confirm('Click OK or Cancel.')">
   Show Confirm Box
 </button>
@@ -100,56 +96,64 @@
     <code class="language-markup">
        <script type="text/plain" class="language-markup">
 
-<!-- 1. innerHTML -->
-<p id="outputArea">This text will change when the innerHTML button is clicked.</p>
-<button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
-  Output using innerHTML
+<!-- 1. JS Operator Example -->
+<p id="mathArea">Math result will appear here.</p>
+<button type="button" onclick="document.getElementById('mathArea').textContent=7*13">
+  Calculate 7 * 13
 </button>
 
-<!-- 2. document.write() -->
-<button type="button" onclick="document.write('This text was written using document.write()')">
-  Output using document.write()
-</button>
-
-<!-- 3. alert() -->
-<button type="button" onclick="alert('This message is displayed using alert().')">
-  Output using alert()
-</button>
-
-<!-- 4. window.print() -->
-<button type="button" onclick="window.print()">
-  Print this page using window.print()
-</button>
-
-<!-- 5. textContent -->
-<p id="textArea">This text can change.</p>
-<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
-  Change Text (textContent)
-</button>
-
-<!-- 6. Change text color -->
-<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
-  Change Text Color
-</button>
-
-<!-- 7. Change background color -->
-<button type="button" onclick="this.style.backgroundColor='lightgreen'">
-  Change Button Background
-</button>
-
-<!-- 8. Display current date using Date() -->
-<p id="dateArea">Date will appear here.</p>
-<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
-  Show Current Date
-</button>
-
-<!-- 9. Simple math operation -->
+<!-- 2. Simple math operation -->
 <p id="mathArea">Math result will appear here.</p>
 <button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
   Calculate 5 + 3
 </button>
 
-<!-- 10. confirm() dialog -->
+<!-- 3. textContent -->
+<p id="textArea">This text can change.</p>
+<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
+  Change Text (textContent)
+</button>
+
+<!-- 4. Change text color -->
+<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
+  Change Text Color
+</button>
+
+<!-- 5. Change background color -->
+<button type="button" onclick="this.style.backgroundColor='lightgreen'">
+  Change Button Background
+</button>
+
+<!-- 6. window.print() -->
+<button type="button" onclick="window.print()">
+  Print this page using window.print()
+</button>
+
+
+<!-- 7. innerHTML -->
+<p id="outputArea">This text will change when the innerHTML button is clicked.</p>
+<button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
+  Output using innerHTML
+</button>
+
+<!-- 8. document.write() -->
+<button type="button" onclick="document.write('This text was written using document.write()')">
+  Output using document.write()
+</button>
+
+<!-- 9. alert() -->
+<button type="button" onclick="alert('This message is displayed using alert().')">
+  Output using alert()
+</button>
+
+<!-- 10. Display current date using Date() -->
+<p id="dateArea">Date will appear here.</p>
+<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
+  Show Current Date
+</button>
+
+
+<!-- 11. confirm() dialog -->
 <button type="button" onclick="confirm('Click OK or Cancel.')">
   Show Confirm Box
 </button>
