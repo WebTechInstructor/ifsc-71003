@@ -24,138 +24,421 @@
           <header>
             <h2>HTML and JavaScript Reference Document</h2>
             <p class="due">HTML Element Count: 47</p>
-          </header>    
+          </header>
           <section id="buttons">
-            <p class="ele-ct">Element Count: 11</p>
+            <p class="ele-ct">Element Count: 19</p>
             <h2 class="section-heading">Buttons with JavaScript</h2>
             <div class="output">
-<!-- 1. JS Operator Example -->
-<p id="mathArea1">Math result will appear here.</p>
-<button type="button" onclick="document.getElementById('mathArea1').textContent=7*13">
-  Calculate 7 * 13
-</button>
+              <h3>
+                Descriptions of each technique used and numbering of elements is
+                located in the code samples inside an HTML comment.
+              </h3>
+              <!-- 1. JS Operator Example
+       The * operator multiplies two numbers together. JavaScript evaluates the expression and returns the result. -->
+              <p id="mathArea">Math result will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('mathArea').textContent = 7 * 13
+                "
+              >
+                Calculate 7 * 13
+              </button>
 
-<!-- 2. Simple math operation -->
-<p id="mathArea">Math result will appear here.</p>
-<button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
-  Calculate 5 + 3
-</button>
+              <!-- 2. Simple math operation
+       The + operator adds two numbers together. JavaScript evaluates the expression and displays the sum. -->
+              <p id="mathArea2">Math result will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('mathArea2').textContent = 5 + 3
+                "
+              >
+                Calculate 5 + 3
+              </button>
 
-<!-- 3. textContent -->
-<p id="textArea">This text can change.</p>
-<button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
-  Change Text (textContent)
-</button>
+              <!-- 3. textContent
+       The textContent property sets or gets the plain text content of an element, stripping out any HTML tags. -->
+              <p id="textArea">This text can change.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('textArea').textContent =
+                    'Text updated using textContent.'
+                "
+              >
+                Change Text (textContent)
+              </button>
 
-<!-- 4. Change text color -->
-<button type="button" onclick="document.getElementById('textArea').style.color='blue'">
-  Change Text Color
-</button>
+              <!-- 4. Change text color
+       The style.color property changes the foreground color of an element using any valid CSS color value. -->
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('textArea').style.color = 'blue'
+                "
+              >
+                Change Text Color
+              </button>
 
-<!-- 5. Change background color -->
-<button type="button" onclick="this.style.backgroundColor='lightgreen'">
-  Change Button Background
-</button>
+              <!-- 5. Change background color
+       The style.backgroundColor property changes the background color of an element. Using 'this' targets the button itself. -->
+              <button
+                type="button"
+                onclick="this.style.backgroundColor = 'lightgreen'"
+              >
+                Change Button Background
+              </button>
 
-<!-- 6. window.print() -->
-<button type="button" onclick="window.print()">
-  Print this page using window.print()
-</button>
+              <!-- 6. window.print()
+       window.print() opens the browser's print dialog, allowing the user to print or save the current page as a PDF. -->
+              <button type="button" onclick="window.print()">
+                Print this page using window.print()
+              </button>
 
+              <!-- 7. innerHTML
+       The innerHTML property sets or gets the HTML content inside an element, including any tags, not just plain text. -->
+              <p id="outputArea">
+                This text will change when the innerHTML button is clicked.
+              </p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('outputArea').innerHTML =
+                    'The innerHTML method has updated this paragraph.'
+                "
+              >
+                Output using innerHTML
+              </button>
 
-<!-- 7. innerHTML -->
-<p id="outputArea">This text will change when the innerHTML button is clicked.</p>
-<button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
-  Output using innerHTML
-</button>
+              <!-- 8. document.write()
+       document.write() writes a string directly to the HTML document. Note: calling it after the page loads replaces the entire page. -->
+              <button
+                type="button"
+                onclick="
+                  document.write('This text was written using document.write()')
+                "
+              >
+                Output using document.write()
+              </button>
 
-<!-- 8. document.write() -->
-<button type="button" onclick="document.write('This text was written using document.write()')">
-  Output using document.write()
-</button>
+              <!-- 9. alert()
+       alert() displays a modal popup dialog with a message and an OK button. It pauses all page activity until dismissed. -->
+              <button
+                type="button"
+                onclick="alert('This message is displayed using alert().')"
+              >
+                Output using alert()
+              </button>
 
-<!-- 9. alert() -->
-<button type="button" onclick="alert('This message is displayed using alert().')">
-  Output using alert()
-</button>
+              <!-- 10. Display current date using Date()
+       The Date() function returns the current date and time as a formatted string based on the user's system clock. -->
+              <p id="dateArea">Date will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('dateArea').textContent = Date()
+                "
+              >
+                Show Current Date
+              </button>
 
-<!-- 10. Display current date using Date() -->
-<p id="dateArea">Date will appear here.</p>
-<button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
-  Show Current Date
-</button>
+              <!-- 11. confirm() dialog
+       confirm() displays a modal dialog with OK and Cancel buttons and returns true if OK is clicked, false if Cancel is clicked. -->
+              <button type="button" onclick="confirm('Click OK or Cancel.')">
+                Show Confirm Box
+              </button>
 
+              <!-- 12. console.log()
+       console.log() writes a message to the browser's developer console. It is invisible to users and is used by developers for debugging. Open the console with F12 to see the output. -->
+              <button
+                type="button"
+                onclick="console.log('Hello from the console!')"
+              >
+                Log to Console
+              </button>
 
-<!-- 11. confirm() dialog -->
-<button type="button" onclick="confirm('Click OK or Cancel.')">
-  Show Confirm Box
-</button>
+              <!-- 13. for loop
+       A for loop repeats a block of code a set number of times. This loop adds every number from 0 to 199 together by accumulating a running total in the variable 'sum'. -->
+              <p id="loopArea">Sum will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  let sum = 0;
+                  for (let i = 0; i <= 199; i++) {
+                    sum += i;
+                  }
+                  document.getElementById('loopArea').textContent =
+                    'Sum: ' + sum;
+                "
+              >
+                Run Loop (0–199)
+              </button>
+
+              <!-- 14. typeof
+       The typeof operator returns a string describing the data type of a value, such as 'number', 'string', or 'boolean'. It is useful for debugging when you are unsure what kind of data a variable holds. -->
+              <button
+                type="button"
+                onclick="
+                  alert(typeof 77 + '\n' + typeof 'hello' + '\n' + typeof true)
+                "
+              >
+                Check Data Types
+              </button>
+
+              <!-- 15. toUpperCase()
+       toUpperCase() is a string method that returns a new version of the string with all characters converted to uppercase. It is called using dot notation directly on a string value. -->
+              <p id="caseArea">Text will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('caseArea').textContent =
+                    'hello world'.toUpperCase()
+                "
+              >
+                Convert to Uppercase
+              </button>
+
+              <!-- 16. Math.random()
+       Math.random() is a method on the built-in Math object that generates a random decimal number between 0 (inclusive) and 1 (exclusive) each time it is called. -->
+              <p id="randomArea">Random number will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('randomArea').textContent =
+                    Math.random()
+                "
+              >
+                Generate Random Number
+              </button>
+
+              <!-- 17. setTimeout()
+       setTimeout() schedules a function to run once after a specified delay in milliseconds. The code inside does not run immediately — it is handed off to run later, making this an example of a callback function. -->
+              <p id="timerArea">Waiting...</p>
+              <button
+                type="button"
+                onclick="
+                  document.getElementById('timerArea').textContent =
+                    'Waiting...';
+                  setTimeout(function () {
+                    document.getElementById('timerArea').textContent =
+                      'This appeared after 3 seconds!';
+                  }, 3000);
+                "
+              >
+                Start Timer
+              </button>
+
+              <!-- 18. Array
+       An array stores multiple values in a single variable as an ordered list. Each item has a numbered index starting at 0, so the second item is accessed with index [1]. -->
+              <p id="arrayArea">Array item will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  let fruits = ['apple', 'banana', 'cherry'];
+                  document.getElementById('arrayArea').textContent = fruits[1];
+                "
+              >
+                Show Array Item
+              </button>
+
+              <!-- 19. if/else
+       An if/else statement runs different blocks of code depending on whether a condition evaluates to true or false. It is the most fundamental decision-making tool in programming. -->
+              <p id="conditionArea">Result will appear here.</p>
+              <button
+                type="button"
+                onclick="
+                  let num = 15;
+                  if (num > 10) {
+                    document.getElementById('conditionArea').textContent =
+                      num + ' is greater than 10';
+                  } else {
+                    document.getElementById('conditionArea').textContent =
+                      num + ' is not greater than 10';
+                  }
+                "
+              >
+                Check Condition
+              </button>
             </div>
             <div class="markup">
               <pre>
     <code class="language-markup">
        <script type="text/plain" class="language-markup">
 
-<!-- 1. JS Operator Example -->
+<!-- 1. JS Operator Example
+       The * operator multiplies two numbers together. JavaScript 
+       evaluates the expression and returns the result. -->
 <p id="mathArea">Math result will appear here.</p>
 <button type="button" onclick="document.getElementById('mathArea').textContent=7*13">
   Calculate 7 * 13
 </button>
 
-<!-- 2. Simple math operation -->
-<p id="mathArea">Math result will appear here.</p>
-<button type="button" onclick="document.getElementById('mathArea').textContent=5+3">
+<!-- 2. Simple math operation
+       The + operator adds two numbers together. JavaScript evaluates 
+       the expression and displays the sum. -->
+<p id="mathArea2">Math result will appear here.</p>
+<button type="button" onclick="document.getElementById('mathArea2').textContent=5+3">
   Calculate 5 + 3
 </button>
 
-<!-- 3. textContent -->
+<!-- 3. textContent
+       The textContent property sets or gets the plain text content 
+       of an element, stripping out any HTML tags. -->
 <p id="textArea">This text can change.</p>
 <button type="button" onclick="document.getElementById('textArea').textContent='Text updated using textContent.'">
   Change Text (textContent)
 </button>
 
-<!-- 4. Change text color -->
+<!-- 4. Change text color
+       The style.color property changes the foreground color of an 
+       element using any valid CSS color value. -->
 <button type="button" onclick="document.getElementById('textArea').style.color='blue'">
   Change Text Color
 </button>
 
-<!-- 5. Change background color -->
+<!-- 5. Change background color
+       The style.backgroundColor property changes the background 
+       color of an element. Using 'this' targets the button itself. -->
 <button type="button" onclick="this.style.backgroundColor='lightgreen'">
   Change Button Background
 </button>
 
-<!-- 6. window.print() -->
+<!-- 6. window.print()
+       window.print() opens the browser's print dialog, allowing the 
+       user to print or save the current page as a PDF. -->
 <button type="button" onclick="window.print()">
   Print this page using window.print()
 </button>
 
-
-<!-- 7. innerHTML -->
+<!-- 7. innerHTML
+       The innerHTML property sets or gets the HTML content inside an
+        element, including any tags, not just plain text. -->
 <p id="outputArea">This text will change when the innerHTML button is clicked.</p>
 <button type="button" onclick="document.getElementById('outputArea').innerHTML = 'The innerHTML method has updated this paragraph.'">
   Output using innerHTML
 </button>
 
-<!-- 8. document.write() -->
+<!-- 8. document.write()
+       document.write() writes a string directly to the HTML document. 
+       Note: calling it after the page loads replaces the entire page. -->
 <button type="button" onclick="document.write('This text was written using document.write()')">
   Output using document.write()
 </button>
 
-<!-- 9. alert() -->
+<!-- 9. alert()
+       alert() displays a modal popup dialog with a message and an 
+       OK button. It pauses all page activity until dismissed. -->
 <button type="button" onclick="alert('This message is displayed using alert().')">
   Output using alert()
 </button>
 
-<!-- 10. Display current date using Date() -->
+<!-- 10. Display current date using Date()
+       The Date() function returns the current date and time as a 
+       formatted string based on the user's system clock. -->
 <p id="dateArea">Date will appear here.</p>
 <button type="button" onclick="document.getElementById('dateArea').textContent=Date()">
   Show Current Date
 </button>
 
-
-<!-- 11. confirm() dialog -->
+<!-- 11. confirm() dialog
+       confirm() displays a modal dialog with OK and Cancel buttons
+        and returns true if OK is clicked, false if Cancel is clicked. -->
 <button type="button" onclick="confirm('Click OK or Cancel.')">
   Show Confirm Box
+</button>
+
+<!-- 12. console.log()
+       console.log() writes a message to the browser's developer console. 
+       It is invisible to users and is used by developers for debugging. 
+       Open the console with F12 to see the output. -->
+<button type="button" onclick="console.log('Hello from the console!')">
+  Log to Console
+</button>
+
+<!-- 13. for loop
+       A for loop repeats a block of code a set number of times. 
+       This loop adds every number from 0 to 199 together by accumulating 
+       a running total in the variable 'sum'. -->
+<p id="loopArea">Sum will appear here.</p>
+<button type="button" onclick="
+    let sum = 0;
+    for (let i = 0; i <= 199; i++) {
+      sum += i;
+    }
+    document.getElementById('loopArea').textContent = 'Sum: ' + sum;
+  ">
+  Run Loop (0–199)
+</button>
+
+<!-- 14. typeof
+       The typeof operator returns a string describing the data 
+       type of a value, such as 'number', 'string', or 'boolean'. 
+       It is useful for debugging when you are unsure what kind 
+       of data a variable holds. -->
+<button type="button" onclick="alert(typeof 77 + '\n' + typeof 'hello' + '\n' + typeof true)">
+  Check Data Types
+</button>
+
+<!-- 15. toUpperCase()
+       toUpperCase() is a string method that returns a new version of
+        the string with all characters converted to uppercase. It is 
+        called using dot notation directly on a string value. -->
+<p id="caseArea">Text will appear here.</p>
+<button type="button" onclick="document.getElementById('caseArea').textContent = 'hello world'.toUpperCase()">
+  Convert to Uppercase
+</button>
+
+<!-- 16. Math.random()
+       Math.random() is a method on the built-in Math object that 
+       generates a random decimal number between 0 (inclusive) and 
+       1 (exclusive) each time it is called. -->
+<p id="randomArea">Random number will appear here.</p>
+<button type="button" onclick="document.getElementById('randomArea').textContent = Math.random()">
+  Generate Random Number
+</button>
+
+<!-- 17. setTimeout()
+       setTimeout() schedules a function to run once after 
+       a specified delay in milliseconds. The code inside does 
+       not run immediately — it is handed off to run later, 
+       making this an example of a callback function. -->
+<p id="timerArea">Waiting...</p>
+<button type="button" onclick="
+    document.getElementById('timerArea').textContent = 'Waiting...';
+    setTimeout(function() {
+      document.getElementById('timerArea').textContent = 'This appeared after 3 seconds!';
+    }, 3000);
+  ">
+  Start Timer
+</button>
+
+<!-- 18. Array
+       An array stores multiple values in a single variable as 
+       an ordered list. Each item has a numbered index starting at 0, 
+       so the second item is accessed with index [1]. -->
+<p id="arrayArea">Array item will appear here.</p>
+<button type="button" onclick="
+    let fruits = ['apple', 'banana', 'cherry'];
+    document.getElementById('arrayArea').textContent = fruits[1];
+  ">
+  Show Array Item
+</button>
+
+<!-- 19. if/else
+       An if/else statement runs different blocks of code depending 
+       on whether a condition evaluates to true or false. It is the 
+       most fundamental decision-making tool in programming. -->
+<p id="conditionArea">Result will appear here.</p>
+<button type="button" onclick="
+    let num = 15;
+    if (num > 10) {
+      document.getElementById('conditionArea').textContent = num + ' is greater than 10';
+    } else {
+      document.getElementById('conditionArea').textContent = num + ' is not greater than 10';
+    }
+  ">
+  Check Condition
 </button>
        </script>
     </code>
@@ -475,105 +758,141 @@ PageMaker including versions of <sub>Lorem</sub><sup>Ipsum</sup>.
             <p class="ele-ct">Element Count: 20</p>
             <h2 class="section-heading">Forms</h2>
             <div class="output">
+              <form
+                action="https://www.w3schools.com/action_page.php"
+                method="get"
+              >
+                <fieldset>
+                  <legend>Sample Form Fields</legend>
+                  <label for="first-name">First Name</label>
+                  <input
+                    type="input"
+                    id="first-name"
+                    name="first-name"
+                    required
+                  />
+                  <label for="comments">Comments</label>
+                  <textarea id="comments" name="comments"></textarea>
+                  <label for="fav-car">Favorite Car Maker</label>
+                  <select id="fav-car" name="fav-car">
+                    <option value="F">Ford</option>
+                    <option value="C">Chevy</option>
+                    <option value="D">Dodge</option>
+                    <option value="null" selected>---</option>
+                  </select>
+                  <fieldset>
+                    <legend>Select a maintenance drone:</legend>
 
-              <form action="https://www.w3schools.com/action_page.php" method="get">
-  <fieldset>
-    <legend>Sample Form Fields</legend>
-    <label for="first-name">First Name</label>
-    <input type="input" id="first-name" name="first-name" required />
-    <label for="comments">Comments</label>
-    <textarea id="comments" name="comments"></textarea>
-    <label for="fav-car">Favorite Car Maker</label>
-    <select id="fav-car" name="fav-car">
-      <option value="F">Ford</option>
-      <option value="C">Chevy</option>
-      <option value="D">Dodge</option>
-      <option value="null" selected>---</option>
-    </select>
-    <fieldset>
-      <legend>Select a maintenance drone:</legend>
+                    <div>
+                      <input
+                        type="radio"
+                        id="huey"
+                        name="drone"
+                        value="huey"
+                        checked
+                      />
+                      <label for="huey">Huey</label>
+                    </div>
 
-      <div>
-        <input type="radio" id="huey" name="drone" value="huey" checked />
-        <label for="huey">Huey</label>
-      </div>
+                    <div>
+                      <input
+                        type="radio"
+                        id="dewey"
+                        name="drone"
+                        value="dewey"
+                      />
+                      <label for="dewey">Dewey</label>
+                    </div>
 
-      <div>
-        <input type="radio" id="dewey" name="drone" value="dewey" />
-        <label for="dewey">Dewey</label>
-      </div>
+                    <div>
+                      <input
+                        type="radio"
+                        id="louie"
+                        name="drone"
+                        value="louie"
+                      />
+                      <label for="louie">Louie</label>
+                    </div>
+                  </fieldset>
+                </fieldset>
 
-      <div>
-        <input type="radio" id="louie" name="drone" value="louie" />
-        <label for="louie">Louie</label>
-      </div>
-    </fieldset>
-  </fieldset>
+                <fieldset>
+                  <legend>HTML5 Input Types</legend>
 
-  <fieldset>
-    <legend>HTML5 Input Types</legend>
+                  <label>Text</label>
+                  <input type="text" />
 
-    <label>Text</label>
-    <input type="text">
+                  <label>Time</label>
+                  <input type="time" />
 
-    <label>Time</label>
-    <input type="time">
+                  <label>Date</label>
+                  <input type="date" min="2015-05-15" max="2015-05-25" />
 
-    <label>Date</label>
-    <input type="date" min="2015-05-15" max="2015-05-25">
+                  <label>Datetime</label>
+                  <input type="datetime" />
 
-    <label>Datetime</label>
-    <input type="datetime">
+                  <label>Datetime-local</label>
+                  <input type="datetime-local" min="2014-09-09T12:00:00.00" />
 
-    <label>Datetime-local</label>
-    <input type="datetime-local" min="2014-09-09T12:00:00.00">
+                  <label>Month</label>
+                  <input type="month" />
 
-    <label>Month</label>
-    <input type="month">
+                  <label>Week</label>
+                  <input type="week" />
 
-    <label>Week</label>
-    <input type="week">
+                  <label>Email</label>
+                  <input type="email" />
 
-    <label>Email</label>
-    <input type="email">
+                  <label>Tel</label>
+                  <input type="tel" />
 
-    <label>Tel</label>
-    <input type="tel">
+                  <label>Search</label>
+                  <input type="search" />
 
-    <label>Search</label>
-    <input type="search">
+                  <label>Number</label>
+                  <input type="number" step="any" />
+                  <input
+                    type="number"
+                    pattern="[0-9]*"
+                    placeholder="Number type with number pattern"
+                  />
 
-    <label>Number</label>
-    <input type="number" step="any">
-    <input type="number" pattern="[0-9]*" placeholder="Number type with number pattern">
+                  <label>URL</label>
+                  <input type="url" />
 
-    <label>URL</label>
-    <input type="url">
+                  <label>Range</label>
+                  <input type="range" />
 
-    <label>Range</label>
-    <input type="range">
+                  <label>Color</label>
+                  <input type="color" />
 
-    <label>Color</label>
-    <input type="color">
+                  <label>Pattern</label>
+                  <input
+                    type="text"
+                    pattern="[0-9]*"
+                    placeholder="Text type with number pattern"
+                  />
 
-    <label>Pattern</label>
-    <input type="text" pattern="[0-9]*" placeholder="Text type with number pattern">
+                  <label>Dropdown</label>
+                  <select>
+                    <option>Item 1</option>
+                    <option>Item 2</option>
+                    <option>Item 3</option>
+                    <option>Item 4</option>
+                    <option>Item 5</option>
+                    <option>Item 6</option>
+                  </select>
 
-    <label>Dropdown</label>
-    <select>
-      <option>Item 1</option>
-      <option>Item 2</option>
-      <option>Item 3</option>
-      <option>Item 4</option>
-      <option>Item 5</option>
-      <option>Item 6</option>
-    </select>
-
-    <label>Username Field w/ auto-capitalize off</label>
-    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-    <input type="submit" value="Send" />
-  </fieldset>
-</form>
+                  <label>Username Field w/ auto-capitalize off</label>
+                  <input
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                  />
+                  <input type="submit" value="Send" />
+                </fieldset>
+              </form>
             </div>
             <div class="markup">
               <pre>

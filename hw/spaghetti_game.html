@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spaghetti Untangler — Process Builder Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --surface: #1a1828;
+    --surface2: #242236;
+    --accent: #ff4d4d;
+    --accent2: #ffb347;
+    --green: #4dffb4;
+    --blue: #4db8ff;
+    --text: #fffffe;
+    --muted: #a7a9be;
+    --border: #2e2c45;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,77,77,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,77,77,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .title-block h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    letter-spacing: 2px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .title-block h1 span { color: var(--accent); }
+
+  .title-block p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .score-panel {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .score-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .score-box .val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--accent2);
+  }
+
+  .score-box .lbl {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Level badge */
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .level-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* Scenario card */
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scenario-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .scenario-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .scenario-card p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .scenario-card .goal {
+    margin-top: 12px;
+    background: var(--surface2);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    color: var(--green);
+  }
+
+  /* Step pool and drop zone */
+  .build-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .build-area { grid-template-columns: 1fr; }
+  }
+
+  .pool-section, .process-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .pool-section h3, .process-section h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pool-section h3::after {
+    content: 'drag to build →';
+    font-size: 0.65rem;
+    color: var(--border);
+  }
+
+  .step-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 0.88rem;
+    cursor: grab;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+
+  .step-chip:hover {
+    border-color: var(--accent);
+    background: rgba(255,77,77,0.08);
+    transform: translateX(2px);
+  }
+
+  .step-chip.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .step-chip .chip-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .step-chip .chip-text {
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .step-chip .chip-tag {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .tag-waste { background: rgba(255,77,77,0.2); color: var(--accent); }
+  .tag-essential { background: rgba(77,255,180,0.15); color: var(--green); }
+  .tag-optional { background: rgba(255,179,71,0.15); color: var(--accent2); }
+
+  /* Drop zone */
+  .drop-zone {
+    min-height: 200px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(255,77,77,0.05);
+  }
+
+  .drop-zone.empty-hint::after {
+    content: 'Drop steps here to build your process';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    color: var(--border);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .process-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: grab;
+    position: relative;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .process-step .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .process-step .remove-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--border);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .process-step .remove-btn:hover {
+    background: rgba(255,77,77,0.2);
+    color: var(--accent);
+  }
+
+  /* Efficiency meter */
+  .meter-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+
+  .meter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .meter-header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+
+  .meter-header .meter-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--green);
+  }
+
+  .meter-bar-bg {
+    height: 12px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .meter-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--green));
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 0%;
+  }
+
+  .meter-hints {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .hint-chip {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    transition: all 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: #ff6b6b; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+
+  /* Result panel */
+  .result-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-panel.show { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-panel.good::before { background: linear-gradient(90deg, var(--green), var(--blue)); }
+  .result-panel.bad::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .result-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .result-panel h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .result-panel.good h3 { color: var(--green); }
+  .result-panel.bad h3 { color: var(--accent); }
+
+  .result-panel p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+
+  .result-breakdown {
+    display: flex;
+    gap: 10px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .breakdown-item {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+
+  .breakdown-item .bd-label { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .breakdown-item .bd-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; }
+  .bd-val.pos { color: var(--green); }
+  .bd-val.neg { color: var(--accent); }
+  .bd-val.neu { color: var(--accent2); }
+
+  /* Progress bar at top */
+  .progress-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .prog-dot {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .prog-dot.done { background: var(--green); }
+  .prog-dot.current { background: var(--accent2); animation: blink 1s infinite; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.5; }
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 10px 22px;
+    font-size: 0.88rem;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Game over screen */
+  #game-over {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  #game-over.show { display: block; animation: fadeUp 0.4s ease; }
+
+  #game-over h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    letter-spacing: 3px;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+
+  #game-over .final-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 7rem);
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  #game-over p { color: var(--muted); margin: 10px 0 24px; font-size: 1rem; }
+
+  .grade-badge {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    padding: 8px 24px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="title-block">
+      <h1>SPAGHETTI<span>UNTANGLER</span></h1>
+      <p>Build lean processes. Eliminate waste. Score points.</p>
+    </div>
+    <div class="score-panel">
+      <div class="score-box">
+        <div class="val" id="score-display">0</div>
+        <div class="lbl">Points</div>
+      </div>
+      <div class="score-box">
+        <div class="val" id="level-display">1</div>
+        <div class="lbl">Level</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="progress-row" id="progress-row"></div>
+
+  <div id="game-area">
+    <div class="level-badge">
+      <div class="dot"></div>
+      <span id="level-label">Level 1 — Beginner</span>
+    </div>
+
+    <div class="scenario-card">
+      <h2 id="scenario-title">Scenario</h2>
+      <p id="scenario-desc"></p>
+      <div class="goal" id="scenario-goal"></div>
+    </div>
+
+    <div class="build-area">
+      <div class="pool-section">
+        <h3>Available Steps</h3>
+        <div id="step-pool"></div>
+      </div>
+      <div class="process-section">
+        <h3>Your Process</h3>
+        <div class="drop-zone empty-hint" id="drop-zone"></div>
+      </div>
+    </div>
+
+    <div class="meter-section">
+      <div class="meter-header">
+        <span>Efficiency Score</span>
+        <span class="meter-val" id="meter-val">0%</span>
+      </div>
+      <div class="meter-bar-bg">
+        <div class="meter-bar-fill" id="meter-fill"></div>
+      </div>
+      <div class="meter-hints" id="meter-hints"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="submitProcess()">SUBMIT PROCESS</button>
+      <button class="btn btn-secondary" onclick="clearProcess()">CLEAR</button>
+      <button class="btn btn-secondary" onclick="showHint()">HINT (-5 pts)</button>
+    </div>
+
+    <div class="result-panel" id="result-panel">
+      <h3 id="result-title"></h3>
+      <div class="result-breakdown" id="result-breakdown"></div>
+      <p id="result-msg"></p>
+      <div style="margin-top:16px">
+        <button class="btn btn-primary" id="next-btn" onclick="nextLevel()">NEXT LEVEL →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-over">
+    <h2>SESSION COMPLETE</h2>
+    <div class="final-score" id="final-score-display">0</div>
+    <div class="grade-badge" id="grade-badge"></div>
+    <p id="final-msg"></p>
+    <button class="btn btn-primary" onclick="restartGame()">PLAY AGAIN</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LEVELS = [
+  {
+    id: 1,
+    label: "Level 1 — Beginner",
+    title: "Password Reset Request",
+    desc: "A user submits a password reset ticket. Currently the ticket bounces between 4 teams before resolution, taking 3 days.",
+    goal: "Goal: Build the leanest possible process. Include only essential steps.",
+    steps: [
+      { id: "a1", icon: "📥", text: "User submits ticket via portal", tag: "essential" },
+      { id: "a2", icon: "📋", text: "Manager manually reviews all new tickets", tag: "waste" },
+      { id: "a3", icon: "🤖", text: "System auto-routes to IT helpdesk", tag: "essential" },
+      { id: "a4", icon: "📧", text: "IT emails user to confirm ticket received", tag: "optional" },
+      { id: "a5", icon: "🔐", text: "Helpdesk resets password in system", tag: "essential" },
+      { id: "a6", icon: "📤", text: "Ticket forwarded to security team for review", tag: "waste" },
+      { id: "a7", icon: "✅", text: "User notified with new credentials", tag: "essential" },
+      { id: "a8", icon: "📊", text: "Ticket logged and closed in system", tag: "essential" },
+      { id: "a9", icon: "🔁", text: "Security team sends ticket back to helpdesk", tag: "waste" },
+    ],
+    optimal: ["a1","a3","a5","a7","a8"],
+    minRequired: ["a1","a3","a5","a7"],
+    wasteSteps: ["a2","a6","a9"],
+    maxPoints: 100,
+    explanation: "The optimal flow skips manager review and security escalation — neither adds value for a basic reset. Auto-routing eliminates backtracking between teams."
+  },
+  {
+    id: 2,
+    label: "Level 2 — Intermediate",
+    title: "New Employee Laptop Setup",
+    desc: "HR requests a laptop for a new hire starting Monday. The current process takes 2 weeks due to circular approvals and manual steps that could be automated.",
+    goal: "Goal: Eliminate backtracking and duplicate approvals. Order matters here!",
+    steps: [
+      { id: "b1", icon: "📋", text: "HR submits hardware request", tag: "essential" },
+      { id: "b2", icon: "👔", text: "IT Director manually approves all hardware", tag: "waste" },
+      { id: "b3", icon: "✅", text: "IT manager approves standard laptop request", tag: "essential" },
+      { id: "b4", icon: "📦", text: "Procurement orders from pre-approved vendor", tag: "essential" },
+      { id: "b5", icon: "🔁", text: "Procurement sends back for second HR signature", tag: "waste" },
+      { id: "b6", icon: "💻", text: "IT configures laptop with standard image", tag: "essential" },
+      { id: "b7", icon: "🔐", text: "Security team installs endpoint protection", tag: "essential" },
+      { id: "b8", icon: "📧", text: "IT emails HR the same info already in ticketing system", tag: "waste" },
+      { id: "b9", icon: "🎉", text: "Laptop delivered to new employee on Day 1", tag: "essential" },
+      { id: "b10", icon: "📝", text: "Asset logged in IT inventory system", tag: "essential" },
+      { id: "b11", icon: "👤", text: "HR re-confirms start date already in system", tag: "waste" },
+    ],
+    optimal: ["b1","b3","b4","b6","b7","b9","b10"],
+    minRequired: ["b1","b3","b4","b6","b7","b9"],
+    wasteSteps: ["b2","b5","b8","b11"],
+    maxPoints: 150,
+    explanation: "Director-level approval for standard items creates bottlenecks. The second HR signature and email duplicate data already in the system. Security config belongs in the main flow, not as an afterthought."
+  },
+  {
+    id: 3,
+    label: "Level 3 — Advanced",
+    title: "Software Deployment Pipeline",
+    desc: "A dev team deploys a hotfix to production. Currently 11 steps with multiple handoffs, creating a 72-hour delay for even minor bug fixes.",
+    goal: "Goal: Maximize flow velocity. Eliminate redundant gates while keeping quality control.",
+    steps: [
+      { id: "c1", icon: "💻", text: "Developer commits code to feature branch", tag: "essential" },
+      { id: "c2", icon: "🔁", text: "Developer emails team lead to review code", tag: "waste" },
+      { id: "c3", icon: "🤖", text: "CI pipeline runs automated tests", tag: "essential" },
+      { id: "c4", icon: "👀", text: "Peer code review via pull request", tag: "essential" },
+      { id: "c5", icon: "📋", text: "Manual QA testing of same unit tests already automated", tag: "waste" },
+      { id: "c6", icon: "✅", text: "Team lead approves merge to main branch", tag: "essential" },
+      { id: "c7", icon: "🚀", text: "Automated deployment to staging environment", tag: "essential" },
+      { id: "c8", icon: "🔁", text: "QA manager re-approves after already approving in staging", tag: "waste" },
+      { id: "c9", icon: "🛡️", text: "Security scan runs on build artifact", tag: "essential" },
+      { id: "c10", icon: "📧", text: "Manual email to 12 stakeholders about minor hotfix", tag: "waste" },
+      { id: "c11", icon: "🚢", text: "Automated deployment to production", tag: "essential" },
+      { id: "c12", icon: "📊", text: "Post-deploy monitoring for 30 minutes", tag: "essential" },
+      { id: "c13", icon: "📝", text: "Incident report filed even for successful deployments", tag: "waste" },
+      { id: "c14", icon: "📣", text: "Automated release notification to relevant stakeholders", tag: "essential" },
+    ],
+    optimal: ["c1","c3","c4","c6","c7","c9","c11","c12","c14"],
+    minRequired: ["c1","c3","c4","c6","c7","c11","c12"],
+    wasteSteps: ["c2","c5","c8","c10","c13"],
+    maxPoints: 200,
+    explanation: "Automated tests replace manual re-testing of the same cases. The double QA approval and stakeholder email blast for minor fixes are classic spaghetti waste. Post-deploy monitoring and automated notifications keep quality without slowing flow."
+  },
+  {
+    id: 4,
+    label: "Level 4 — Expert",
+    title: "Customer Data Access Request",
+    desc: "A customer requests their data under privacy regulations. Your organization currently has a 45-day turnaround — well over the legal requirement — due to process bloat.",
+    goal: "Goal: Build a compliant, efficient process. Compliance steps are non-negotiable!",
+    steps: [
+      { id: "d1", icon: "📥", text: "Customer submits formal data request", tag: "essential" },
+      { id: "d2", icon: "🤖", text: "System auto-logs request with timestamp", tag: "essential" },
+      { id: "d3", icon: "👔", text: "CEO notified of individual data request", tag: "waste" },
+      { id: "d4", icon: "🔍", text: "Identity verification of requestor", tag: "essential" },
+      { id: "d5", icon: "🔁", text: "Request sent to legal, then back to IT, then back to legal", tag: "waste" },
+      { id: "d6", icon: "⚖️", text: "Legal confirms request is valid under regulation", tag: "essential" },
+      { id: "d7", icon: "💾", text: "IT locates and compiles all customer data", tag: "essential" },
+      { id: "d8", icon: "🔒", text: "Data anonymization check for third-party info", tag: "essential" },
+      { id: "d9", icon: "📋", text: "Three separate managers sign off on same document", tag: "waste" },
+      { id: "d10", icon: "✅", text: "Privacy officer final review and approval", tag: "essential" },
+      { id: "d11", icon: "📤", text: "Secure delivery of data package to customer", tag: "essential" },
+      { id: "d12", icon: "📝", text: "Compliance log entry for audit trail", tag: "essential" },
+      { id: "d13", icon: "🔁", text: "Re-verification of identity already confirmed in step 4", tag: "waste" },
+      { id: "d14", icon: "📊", text: "Monthly report includes this request", tag: "optional" },
+    ],
+    optimal: ["d1","d2","d4","d6","d7","d8","d10","d11","d12"],
+    minRequired: ["d1","d2","d4","d6","d7","d8","d10","d11","d12"],
+    wasteSteps: ["d3","d5","d9","d13"],
+    maxPoints: 250,
+    explanation: "CEO notification for routine requests, triple sign-offs, and re-verifying already-confirmed identity are pure waste. The legal-IT-legal loop is classic backtracking. Every essential step here directly serves compliance or customer fulfillment."
+  },
+  {
+    id: 5,
+    label: "Level 5 — Master",
+    title: "IT Incident Response",
+    desc: "A P1 outage hits production. Your current incident process takes 4 hours to resolve incidents that should take 45 minutes, due to communication loops and unclear ownership.",
+    goal: "Goal: Maximum speed without skipping critical steps. Every minute costs the business.",
+    steps: [
+      { id: "e1", icon: "🚨", text: "Monitoring system triggers automated alert", tag: "essential" },
+      { id: "e2", icon: "📧", text: "Alert forwarded via email chain to 8 people", tag: "waste" },
+      { id: "e3", icon: "👤", text: "On-call engineer acknowledges and owns incident", tag: "essential" },
+      { id: "e4", icon: "🔍", text: "Initial triage and severity confirmation", tag: "essential" },
+      { id: "e5", icon: "👔", text: "Manager holds 30-min meeting to discuss response plan", tag: "waste" },
+      { id: "e6", icon: "📢", text: "Incident channel opened, stakeholders auto-notified", tag: "essential" },
+      { id: "e7", icon: "🔧", text: "Engineer investigates root cause", tag: "essential" },
+      { id: "e8", icon: "🔁", text: "Engineer updates 5 separate systems manually", tag: "waste" },
+      { id: "e9", icon: "🛠️", text: "Fix identified and implemented", tag: "essential" },
+      { id: "e10", icon: "✅", text: "Fix validated in production", tag: "essential" },
+      { id: "e11", icon: "📣", text: "All-clear communicated to stakeholders", tag: "essential" },
+      { id: "e12", icon: "📝", text: "Incident timeline documented while fresh", tag: "essential" },
+      { id: "e13", icon: "🔁", text: "Same incident reported to three different ticketing systems", tag: "waste" },
+      { id: "e14", icon: "🔬", text: "Post-incident review scheduled within 48 hours", tag: "essential" },
+      { id: "e15", icon: "👔", text: "Executive summary written before incident is resolved", tag: "waste" },
+    ],
+    optimal: ["e1","e3","e4","e6","e7","e9","e10","e11","e12","e14"],
+    minRequired: ["e1","e3","e4","e7","e9","e10","e11","e12"],
+    wasteSteps: ["e2","e5","e8","e13","e15"],
+    maxPoints: 300,
+    explanation: "Email chains during P1 incidents are fatal — automated alerts and dedicated channels replace them. The 30-min planning meeting and executive summary mid-incident are classic waste under pressure. Single-source-of-truth for ticketing eliminates the triple-logging trap."
+  }
+];
+
+let currentLevel = 0;
+let totalScore = 0;
+let processSteps = [];
+let dragSrcId = null;
+let hintUsed = false;
+
+function init() {
+  renderProgressDots();
+  loadLevel(0);
+}
+
+function renderProgressDots() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = '';
+  LEVELS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'prog-dot' + (i < currentLevel ? ' done' : i === currentLevel ? ' current' : '');
+    row.appendChild(d);
+  });
+}
+
+function loadLevel(idx) {
+  currentLevel = idx;
+  hintUsed = false;
+  processSteps = [];
+  const lvl = LEVELS[idx];
+  document.getElementById('level-label').textContent = lvl.label;
+  document.getElementById('scenario-title').textContent = `Scenario ${idx+1} of ${LEVELS.length}: ${lvl.title}`;
+  document.getElementById('scenario-desc').textContent = lvl.desc;
+  document.getElementById('scenario-goal').textContent = lvl.goal;
+  document.getElementById('result-panel').classList.remove('show');
+  document.getElementById('level-display').textContent = idx + 1;
+  renderProgressDots();
+  renderPool();
+  renderDropZone();
+  updateMeter();
+}
+
+function renderPool() {
+  const pool = document.getElementById('step-pool');
+  pool.innerHTML = '';
+  const lvl = LEVELS[currentLevel];
+  // Shuffle steps
+  const shuffled = [...lvl.steps].sort(() => Math.random() - 0.5);
+  shuffled.forEach(step => {
+    const el = createChip(step);
+    pool.appendChild(el);
+  });
+}
+
+function createChip(step, inProcess = false) {
+  const el = document.createElement('div');
+  el.className = inProcess ? 'process-step' : 'step-chip';
+  el.draggable = true;
+  el.dataset.id = step.id;
+
+  if (inProcess) {
+    const num = document.createElement('span');
+    num.className = 'step-num';
+    num.textContent = processSteps.indexOf(step.id) + 1;
+    el.appendChild(num);
+  } else {
+    const icon = document.createElement('span');
+    icon.className = 'chip-icon';
+    icon.textContent = step.icon;
+    el.appendChild(icon);
+  }
+
+  const text = document.createElement('span');
+  text.className = inProcess ? '' : 'chip-text';
+  text.textContent = (inProcess ? step.icon + ' ' : '') + step.text;
+  el.appendChild(text);
+
+  if (!inProcess) {
+    const tag = document.createElement('span');
+    tag.className = `chip-tag tag-${step.tag}`;
+    tag.textContent = step.tag;
+    el.appendChild(tag);
+  }
+
+  if (inProcess) {
+    const rm = document.createElement('button');
+    rm.className = 'remove-btn';
+    rm.textContent = '×';
+    rm.onclick = (e) => { e.stopPropagation(); removeFromProcess(step.id); };
+    el.appendChild(rm);
+  }
+
+  el.addEventListener('dragstart', (e) => {
+    dragSrcId = step.id;
+    el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+  });
+
+  if (!inProcess) {
+    el.addEventListener('click', () => addToProcess(step.id));
+  }
+
+  return el;
+}
+
+function renderDropZone() {
+  const dz = document.getElementById('drop-zone');
+  dz.innerHTML = '';
+  if (processSteps.length === 0) {
+    dz.classList.add('empty-hint');
+  } else {
+    dz.classList.remove('empty-hint');
+    const lvl = LEVELS[currentLevel];
+    processSteps.forEach(sid => {
+      const step = lvl.steps.find(s => s.id === sid);
+      if (step) dz.appendChild(createChip(step, true));
+    });
+  }
+}
+
+function addToProcess(stepId) {
+  if (processSteps.includes(stepId)) { showToast('Already in your process!'); return; }
+  processSteps.push(stepId);
+  // Remove from pool
+  const pool = document.getElementById('step-pool');
+  const chip = pool.querySelector(`[data-id="${stepId}"]`);
+  if (chip) chip.remove();
+  renderDropZone();
+  updateMeter();
+}
+
+function removeFromProcess(stepId) {
+  processSteps = processSteps.filter(id => id !== stepId);
+  renderDropZone();
+  updateMeter();
+  // Add back to pool
+  const lvl = LEVELS[currentLevel];
+  const step = lvl.steps.find(s => s.id === stepId);
+  if (step) {
+    const pool = document.getElementById('step-pool');
+    pool.appendChild(createChip(step));
+  }
+}
+
+function clearProcess() {
+  processSteps = [];
+  renderPool();
+  renderDropZone();
+  updateMeter();
+  document.getElementById('result-panel').classList.remove('show');
+}
+
+// Drag and drop for drop zone
+document.addEventListener('DOMContentLoaded', () => {
+  const dz = document.getElementById('drop-zone');
+
+  dz.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dz.classList.add('drag-over');
+  });
+
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+
+  dz.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dz.classList.remove('drag-over');
+    if (dragSrcId) addToProcess(dragSrcId);
+    dragSrcId = null;
+  });
+});
+
+function updateMeter() {
+  const lvl = LEVELS[currentLevel];
+  if (processSteps.length === 0) {
+    document.getElementById('meter-fill').style.width = '0%';
+    document.getElementById('meter-val').textContent = '0%';
+    document.getElementById('meter-hints').innerHTML = '';
+    return;
+  }
+  const score = calcEfficiency();
+  document.getElementById('meter-fill').style.width = score + '%';
+  document.getElementById('meter-val').textContent = score + '%';
+
+  const hints = document.getElementById('meter-hints');
+  const wasteCount = processSteps.filter(id => lvl.wasteSteps.includes(id)).length;
+  const missingEssential = lvl.minRequired.filter(id => !processSteps.includes(id)).length;
+
+  hints.innerHTML = '';
+  if (wasteCount > 0) {
+    const h = document.createElement('span');
+    h.className = 'hint-chip';
+    h.style.background = 'rgba(255,77,77,0.15)';
+    h.style.color = 'var(--accent)';
+    h.textContent = `${wasteCount} waste step${wasteCount > 1 ? 's' : ''} detected`;
+    hints.appendChild(h);
+  }
+  if (missingEssential > 0) {
+    const h = document.createElement('span');
+    h.className = 'hint-chip';
+    h.style.background = 'rgba(255,179,71,0.15)';
+    h.style.color = 'var(--accent2)';
+    h.textContent = `${missingEssential} required step${missingEssential > 1 ? 's' : ''} missing`;
+    hints.appendChild(h);
+  }
+  if (wasteCount === 0 && missingEssential === 0) {
+    const h = document.createElement('span');
+    h.className = 'hint-chip';
+    h.style.background = 'rgba(77,255,180,0.15)';
+    h.style.color = 'var(--green)';
+    h.textContent = '✓ Looking lean!';
+    hints.appendChild(h);
+  }
+}
+
+function calcEfficiency() {
+  const lvl = LEVELS[currentLevel];
+  const wasteCount = processSteps.filter(id => lvl.wasteSteps.includes(id)).length;
+  const essentialHit = lvl.minRequired.filter(id => processSteps.includes(id)).length;
+  const essentialTotal = lvl.minRequired.length;
+
+  let score = Math.round((essentialHit / essentialTotal) * 100);
+  score -= wasteCount * 12;
+  return Math.max(0, Math.min(100, score));
+}
+
+function submitProcess() {
+  const lvl = LEVELS[currentLevel];
+  if (processSteps.length === 0) { showToast('Add some steps first!'); return; }
+
+  const efficiency = calcEfficiency();
+  const wasteIncluded = processSteps.filter(id => lvl.wasteSteps.includes(id));
+  const missingRequired = lvl.minRequired.filter(id => !processSteps.includes(id));
+  const optionalIncluded = processSteps.filter(id => {
+    const s = lvl.steps.find(x => x.id === id);
+    return s && s.tag === 'optional';
+  });
+
+  // Score calculation
+  let pts = 0;
+  const essentialHit = lvl.minRequired.filter(id => processSteps.includes(id)).length;
+  pts += Math.round((essentialHit / lvl.minRequired.length) * lvl.maxPoints);
+  pts -= wasteIncluded.length * Math.round(lvl.maxPoints * 0.12);
+  pts -= missingRequired.length * Math.round(lvl.maxPoints * 0.15);
+  if (hintUsed) pts -= 5;
+  pts = Math.max(0, pts);
+
+  totalScore += pts;
+  document.getElementById('score-display').textContent = totalScore;
+
+  const panel = document.getElementById('result-panel');
+  const isGood = efficiency >= 70;
+  panel.className = 'result-panel show ' + (isGood ? 'good' : 'bad');
+
+  document.getElementById('result-title').textContent = isGood
+    ? (efficiency >= 90 ? '🏆 Excellent Process!' : '✅ Good Process!')
+    : '⚠️ Process Needs Work';
+
+  // Breakdown
+  const bd = document.getElementById('result-breakdown');
+  bd.innerHTML = '';
+  const items = [
+    { label: 'Efficiency', val: efficiency + '%', cls: efficiency >= 70 ? 'pos' : 'neg' },
+    { label: 'Points Earned', val: '+' + pts, cls: 'pos' },
+    { label: 'Waste Steps', val: wasteIncluded.length, cls: wasteIncluded.length === 0 ? 'pos' : 'neg' },
+    { label: 'Missing Steps', val: missingRequired.length, cls: missingRequired.length === 0 ? 'pos' : 'neg' },
+  ];
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'breakdown-item';
+    div.innerHTML = `<div class="bd-label">${item.label}</div><div class="bd-val ${item.cls}">${item.val}</div>`;
+    bd.appendChild(div);
+  });
+
+  let msg = lvl.explanation;
+  if (wasteIncluded.length > 0) {
+    msg += ` You included ${wasteIncluded.length} waste step(s): ${wasteIncluded.map(id => lvl.steps.find(s=>s.id===id).text).join('; ')}.`;
+  }
+  document.getElementById('result-msg').textContent = msg;
+
+  const nextBtn = document.getElementById('next-btn');
+  if (currentLevel >= LEVELS.length - 1) {
+    nextBtn.textContent = 'SEE FINAL SCORE →';
+  } else {
+    nextBtn.textContent = 'NEXT LEVEL →';
+  }
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function nextLevel() {
+  if (currentLevel >= LEVELS.length - 1) {
+    showGameOver();
+  } else {
+    loadLevel(currentLevel + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function showHint() {
+  const lvl = LEVELS[currentLevel];
+  const wasteInProcess = processSteps.filter(id => lvl.wasteSteps.includes(id));
+  const missingRequired = lvl.minRequired.filter(id => !processSteps.includes(id));
+
+  let hint = '';
+  if (wasteInProcess.length > 0) {
+    hint = `Hint: "${lvl.steps.find(s => s.id === wasteInProcess[0]).text}" is a waste step — consider removing it.`;
+  } else if (missingRequired.length > 0) {
+    hint = `Hint: You're missing a required step — look for one tagged 'essential' in the pool.`;
+  } else {
+    hint = 'Your process looks solid! Try submitting it.';
+  }
+
+  hintUsed = true;
+  showToast(hint, 4000);
+}
+
+function showGameOver() {
+  document.getElementById('game-area').style.display = 'none';
+  const go = document.getElementById('game-over');
+  go.classList.add('show');
+  document.getElementById('final-score-display').textContent = totalScore;
+
+  const maxPossible = LEVELS.reduce((sum, l) => sum + l.maxPoints, 0);
+  const pct = totalScore / maxPossible;
+  let grade, color, msg;
+
+  if (pct >= 0.9) {
+    grade = 'S RANK — LEAN MASTER'; color = 'var(--green)';
+    msg = 'Extraordinary. You eliminated waste with surgical precision across all 5 scenarios. You think in flow.';
+  } else if (pct >= 0.75) {
+    grade = 'A RANK — PROCESS PRO'; color = 'var(--accent2)';
+    msg = 'Outstanding work. A few waste steps slipped through, but your instincts for efficient process design are strong.';
+  } else if (pct >= 0.55) {
+    grade = 'B RANK — SOLID ANALYST'; color = 'var(--blue)';
+    msg = 'Good foundation. You understand the core concepts — keep practicing to sharpen your eye for hidden waste.';
+  } else {
+    grade = 'C RANK — KEEP PRACTICING'; color = 'var(--accent)';
+    msg = 'The concepts are there. Focus on identifying backtracking and redundant approvals — they are the most common spaghetti traps.';
+  }
+
+  const gb = document.getElementById('grade-badge');
+  gb.textContent = grade;
+  gb.style.background = color + '22';
+  gb.style.color = color;
+  gb.style.border = `1px solid ${color}44`;
+  document.getElementById('final-msg').textContent = msg;
+}
+
+function restartGame() {
+  totalScore = 0;
+  currentLevel = 0;
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('game-area').style.display = 'block';
+  document.getElementById('game-over').classList.remove('show');
+  loadLevel(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+init();
+</script>
+</body>
+</html>

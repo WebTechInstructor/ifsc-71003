@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spaghetti Diagram Builder</title>
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f5f1;
+    --bg-tertiary: #efede8;
+    --bg-info: #e6f1fb;
+    --bg-danger: #fcebeb;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6a64;
+    --text-tertiary: #9c9a92;
+    --text-info: #185fa5;
+    --text-danger: #a32d2d;
+    --border-light: rgba(0,0,0,0.1);
+    --border-mid: rgba(0,0,0,0.18);
+    --border-strong: rgba(0,0,0,0.28);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1c1c1a;
+      --bg-secondary: #242422;
+      --bg-tertiary: #2c2c2a;
+      --bg-info: #0c2640;
+      --bg-danger: #2d1010;
+      --text-primary: #e8e6de;
+      --text-secondary: #9c9a92;
+      --text-tertiary: #6b6a64;
+      --text-info: #85b7eb;
+      --text-danger: #f09595;
+      --border-light: rgba(255,255,255,0.08);
+      --border-mid: rgba(255,255,255,0.14);
+      --border-strong: rgba(255,255,255,0.22);
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-bottom: 0.5px solid var(--border-light);
+    background: var(--bg-secondary);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  #app-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    margin-right: 6px;
+  }
+  .tb-group { display: flex; align-items: center; gap: 3px; }
+  .tb-sep { width: 0.5px; height: 20px; background: var(--border-light); margin: 0 4px; }
+  .tb-btn {
+    padding: 5px 11px;
+    border: 0.5px solid var(--border-mid);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: var(--font);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background 0.12s, border-color 0.12s;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .tb-btn:hover { background: var(--bg-tertiary); }
+  .tb-btn.active {
+    background: var(--bg-info);
+    border-color: var(--text-info);
+    color: var(--text-info);
+  }
+  .tb-btn:disabled { opacity: 0.38; cursor: default; pointer-events: none; }
+  .tb-kbd {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    margin-left: 3px;
+  }
+
+  /* ── Main layout ── */
+  #main { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: 200px;
+    min-width: 200px;
+    border-right: 0.5px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    overflow: hidden;
+  }
+  .sec-label {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 10px 10px 4px;
+    font-weight: 600;
+  }
+  #node-list-wrap { flex: 1; overflow-y: auto; padding: 0 6px 6px; }
+  .node-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 7px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    margin-bottom: 1px;
+    transition: background 0.1s;
+  }
+  .node-item:hover { background: var(--bg-tertiary); }
+  .node-item.selected { background: var(--bg-info); }
+  .node-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .node-name { font-size: 12px; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .node-freq { font-size: 10px; color: var(--text-tertiary); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+  /* ── Props panel ── */
+  #props-wrap {
+    border-top: 0.5px solid var(--border-light);
+    padding: 10px;
+    flex-shrink: 0;
+  }
+  .prop-row { margin-bottom: 8px; }
+  .prop-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+  #props-wrap input[type=text],
+  #props-wrap input[type=number] {
+    width: 100%;
+    padding: 5px 7px;
+    font-size: 12px;
+    font-family: var(--font);
+    border: 0.5px solid var(--border-mid);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  #props-wrap input[type=text]:focus,
+  #props-wrap input[type=number]:focus { border-color: var(--text-info); }
+  #props-wrap input[type=range] {
+    width: 100%;
+    accent-color: var(--text-info);
+    cursor: pointer;
+  }
+  .color-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+  .swatch {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 0.5px solid var(--border-light);
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    flex-shrink: 0;
+  }
+  .swatch:hover { transform: scale(1.2); }
+  .swatch.active { box-shadow: 0 0 0 2px var(--text-primary); }
+  .del-btn {
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
+    font-family: var(--font);
+    border: 0.5px solid var(--border-mid);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: var(--bg-primary);
+    color: var(--text-danger);
+    margin-top: 4px;
+    transition: background 0.12s;
+  }
+  .del-btn:hover { background: var(--bg-danger); }
+
+  /* ── Stats bar ── */
+  #stats {
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    border-top: 0.5px solid var(--border-light);
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  #stats b { color: var(--text-primary); font-weight: 600; }
+
+  /* ── Canvas ── */
+  #canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+  svg#cv { width: 100%; height: 100%; display: block; }
+
+  /* ── Zoom controls ── */
+  #zoom-ctrl {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .zoom-btn {
+    width: 28px; height: 28px;
+    border: 0.5px solid var(--border-mid);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+    line-height: 1;
+  }
+  .zoom-btn:hover { background: var(--bg-tertiary); }
+  #zoom-label { font-size: 10px; color: var(--text-tertiary); text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* ── Hint bar ── */
+  #hint {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 5px 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── Scrollbar ── */
+  #node-list-wrap::-webkit-scrollbar { width: 4px; }
+  #node-list-wrap::-webkit-scrollbar-track { background: transparent; }
+  #node-list-wrap::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span id="app-title">Spaghetti</span>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn active" id="btn-select" onclick="setMode('select')">▶ Select</button>
+    <button class="tb-btn" id="btn-node" onclick="setMode('node')">● Node</button>
+    <button class="tb-btn" id="btn-path" onclick="setMode('path')">→ Path</button>
+    <button class="tb-btn" id="btn-pan" onclick="setMode('pan')">✥ Pan</button>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn" id="btn-undo" onclick="undo()" disabled>↺ Undo <span class="tb-kbd">⌘Z</span></button>
+    <button class="tb-btn" id="btn-redo" onclick="redo()" disabled>↻ Redo <span class="tb-kbd">⌘⇧Z</span></button>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn" id="btn-heat" onclick="toggleHeatmap()">◎ Heatmap</button>
+    <button class="tb-btn" id="btn-weight" onclick="toggleWeights()">△ Weights</button>
+    <button class="tb-btn" id="btn-grid" onclick="toggleGrid()"># Grid</button>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-group">
+    <button class="tb-btn" onclick="fitView()">⊡ Fit</button>
+    <button class="tb-btn" onclick="clearAll()">✕ Clear</button>
+    <button class="tb-btn" onclick="exportSVG()">↓ SVG</button>
+    <button class="tb-btn" onclick="exportJSON()">↓ JSON</button>
+    <button class="tb-btn" onclick="importJSON()">↑ Import</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="sidebar">
+    <div class="sec-label">Nodes</div>
+    <div id="node-list-wrap">
+      <div id="node-list"></div>
+    </div>
+    <div id="props-wrap">
+      <div class="sec-label" style="padding:0 0 4px">Properties</div>
+      <div id="props-content" style="color:var(--text-tertiary);font-size:12px">Select a node or path</div>
+    </div>
+    <div id="stats">
+      <span>Nodes: <b id="stat-nodes">0</b></span>
+      <span>Paths: <b id="stat-paths">0</b></span>
+    </div>
+  </div>
+
+  <div id="canvas-wrap">
+    <svg id="cv" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <pattern id="grid-pat" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#888" stroke-width="0.4" opacity="0.3"/>
+        </pattern>
+      </defs>
+      <rect id="grid-bg" width="20000" height="20000" x="-10000" y="-10000" fill="url(#grid-pat)" opacity="0" pointer-events="none"/>
+      <g id="g-root">
+        <g id="g-heat"></g>
+        <g id="g-paths"></g>
+        <g id="g-nodes"></g>
+        <g id="g-preview"></g>
+      </g>
+    </svg>
+    <div id="zoom-ctrl">
+      <button class="zoom-btn" onclick="zoomBy(1.25)" title="Zoom in">+</button>
+      <div id="zoom-label">100%</div>
+      <button class="zoom-btn" onclick="zoomBy(0.8)" title="Zoom out">−</button>
+    </div>
+    <div id="hint">Click to select · drag nodes to move</div>
+  </div>
+</div>
+
+<input type="file" id="file-input" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+const COLORS = ['#378ADD','#1D9E75','#E24B4A','#EF9F27','#D4537E','#534AB7','#3B8BD4','#888780','#B05535','#2A8A6E'];
+const CNAMES  = ['Blue','Teal','Red','Amber','Pink','Purple','Navy','Gray','Rust','Emerald'];
+
+let mode = 'select';
+let nodes = [], paths = [], selectedId = null, pathStart = null, uid = 0;
+let transform = { x: 0, y: 0, scale: 1 };
+let dragging = null, dragOffset = { x: 0, y: 0 };
+let panStart = null, panBase = { x: 0, y: 0 };
+let showHeat = false, showWeightVis = true, showGrid = false;
+let history = [], future = [];
+
+const cv       = document.getElementById('cv');
+const gRoot    = document.getElementById('g-root');
+const gNodes   = document.getElementById('g-nodes');
+const gPaths   = document.getElementById('g-paths');
+const gHeat    = document.getElementById('g-heat');
+const gPreview = document.getElementById('g-preview');
+const hint     = document.getElementById('hint');
+const wrap     = document.getElementById('canvas-wrap');
+const gridBg   = document.getElementById('grid-bg');
+
+/* ── Transform ─────────────────────────────────────────── */
+function applyTransform() {
+  gRoot.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.scale})`);
+  document.getElementById('zoom-label').textContent = Math.round(transform.scale * 100) + '%';
+}
+
+function svgPt(e) {
+  const r = cv.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left - transform.x) / transform.scale,
+    y: (e.clientY - r.top  - transform.y) / transform.scale
+  };
+}
+
+function zoomBy(factor, cx, cy) {
+  const r = cv.getBoundingClientRect();
+  cx = cx ?? r.width / 2; cy = cy ?? r.height / 2;
+  const ns = Math.min(5, Math.max(0.1, transform.scale * factor));
+  transform.x = cx - (cx - transform.x) * (ns / transform.scale);
+  transform.y = cy - (cy - transform.y) * (ns / transform.scale);
+  transform.scale = ns;
+  applyTransform();
+}
+
+function fitView() {
+  if (!nodes.length) { transform = { x: 0, y: 0, scale: 1 }; applyTransform(); return; }
+  const r = cv.getBoundingClientRect();
+  const xs = nodes.map(n => n.x), ys = nodes.map(n => n.y);
+  const pad = 80;
+  const minX = Math.min(...xs) - pad, maxX = Math.max(...xs) + pad;
+  const minY = Math.min(...ys) - pad, maxY = Math.max(...ys) + pad;
+  const scale = Math.min(4, Math.max(0.1, Math.min(r.width / (maxX - minX), r.height / (maxY - minY)) * 0.9));
+  transform.scale = scale;
+  transform.x = r.width  / 2 - ((minX + maxX) / 2) * scale;
+  transform.y = r.height / 2 - ((minY + maxY) / 2) * scale;
+  applyTransform();
+}
+
+/* ── History ────────────────────────────────────────────── */
+function snapshot() { return JSON.stringify({ nodes, paths, uid }); }
+function pushHistory() {
+  history.push(snapshot()); future = [];
+  if (history.length > 80) history.shift();
+  updateUndoRedo();
+}
+function restore(s) {
+  const d = JSON.parse(s);
+  nodes = d.nodes; paths = d.paths; uid = d.uid ?? uid;
+  gNodes.innerHTML = ''; gPaths.innerHTML = ''; gHeat.innerHTML = '';
+  nodes.forEach(renderNode); renderAllPaths(); renderHeatmap();
+  renderList(); updateStats(); showProps();
+}
+function undo() { if (!history.length) return; future.push(snapshot()); restore(history.pop()); updateUndoRedo(); }
+function redo() { if (!future.length)  return; history.push(snapshot()); restore(future.pop());  updateUndoRedo(); }
+function updateUndoRedo() {
+  document.getElementById('btn-undo').disabled = !history.length;
+  document.getElementById('btn-redo').disabled = !future.length;
+}
+
+/* ── Modes ──────────────────────────────────────────────── */
+function setMode(m) {
+  mode = m; pathStart = null; gPreview.innerHTML = '';
+  document.querySelectorAll('.tb-btn[id^=btn-]').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + m)?.classList.add('active');
+  wrap.style.cursor = m === 'pan' ? 'grab' : m === 'node' ? 'crosshair' : 'default';
+  const hints = {
+    select: 'Click to select · drag nodes to move · Delete to remove',
+    node:   'Click canvas to place a node',
+    path:   'Click source node, then destination node',
+    pan:    'Drag to pan · scroll to zoom'
+  };
+  hint.textContent = hints[m];
+}
+
+function toggleHeatmap() {
+  showHeat = !showHeat;
+  document.getElementById('btn-heat').classList.toggle('active', showHeat);
+  renderAllNodes(); renderHeatmap();
+}
+function toggleWeights() {
+  showWeightVis = !showWeightVis;
+  document.getElementById('btn-weight').classList.toggle('active', showWeightVis);
+  renderAllPaths();
+}
+function toggleGrid() {
+  showGrid = !showGrid;
+  document.getElementById('btn-grid').classList.toggle('active', showGrid);
+  gridBg.setAttribute('opacity', showGrid ? '1' : '0');
+}
+
+/* ── Frequency helpers ──────────────────────────────────── */
+function nodeFreq(id)    { return paths.filter(p => p.from === id || p.to === id).length; }
+function maxFreq()       { return Math.max(1, ...nodes.map(n => nodeFreq(n.id))); }
+function pathWeight(p)   { return p.weight || 1; }
+function maxPathWeight() { return Math.max(1, ...paths.map(pathWeight)); }
+
+/* ── Add node ───────────────────────────────────────────── */
+function randColor() { return COLORS[nodes.length % COLORS.length]; }
+
+function addNode(x, y, label, color) {
+  pushHistory();
+  const id = 'n' + (++uid);
+  const n = { id, x, y, label: label || 'Node ' + (nodes.length + 1), color: color || randColor(), r: 20 };
+  nodes.push(n);
+  renderNode(n); renderList(); updateStats(); selectItem(id);
+  return n;
+}
+
+/* ── Render node ────────────────────────────────────────── */
+function renderNode(n) {
+  let el = document.getElementById('sv-' + n.id);
+  if (!el) {
+    el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    el.id = 'sv-' + n.id;
+    el.addEventListener('mousedown', e => {
+      if (mode === 'select') { e.stopPropagation(); dragStart(e, n); }
+      if (mode === 'path')   { e.stopPropagation(); handlePathClick(n); }
+    });
+    gNodes.appendChild(el);
+  }
+  el.innerHTML = '';
+  const freq = nodeFreq(n.id), mf = maxFreq();
+  const pulse = showHeat ? 0.3 + 0.7 * (freq / mf) : 1;
+  const r = showHeat ? n.r * (0.85 + 0.4 * (freq / mf)) : n.r;
+  const isSel = selectedId === n.id;
+
+  if (showHeat && freq > 0) {
+    const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    halo.setAttribute('cx', n.x); halo.setAttribute('cy', n.y);
+    halo.setAttribute('r', r * 1.8);
+    halo.setAttribute('fill', n.color); halo.setAttribute('opacity', 0.1 * pulse);
+    el.appendChild(halo);
+  }
+
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', r);
+  c.setAttribute('fill', n.color + '28');
+  c.setAttribute('stroke', n.color);
+  c.setAttribute('stroke-width', isSel ? '3' : '1.8');
+  if (isSel) c.setAttribute('filter', 'url(#glow)');
+  el.appendChild(c);
+
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', n.x); t.setAttribute('y', n.y + 1);
+  t.setAttribute('text-anchor', 'middle'); t.setAttribute('dominant-baseline', 'central');
+  t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'inherit');
+  t.setAttribute('fill', n.color); t.setAttribute('font-weight', '600');
+  t.setAttribute('pointer-events', 'none');
+  t.textContent = n.label.length > 9 ? n.label.slice(0, 8) + '…' : n.label;
+  el.appendChild(t);
+
+  const lb = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  lb.setAttribute('x', n.x); lb.setAttribute('y', n.y + r + 14);
+  lb.setAttribute('text-anchor', 'middle'); lb.setAttribute('font-size', '10');
+  lb.setAttribute('font-family', 'inherit'); lb.setAttribute('fill', '#888');
+  lb.setAttribute('pointer-events', 'none');
+  lb.textContent = n.label.length > 14 ? n.label.slice(0, 13) + '…' : n.label;
+  el.appendChild(lb);
+
+  if (showHeat && freq > 0) {
+    const ft = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    ft.setAttribute('x', n.x + r - 4); ft.setAttribute('y', n.y - r + 4);
+    ft.setAttribute('text-anchor', 'middle'); ft.setAttribute('font-size', '9');
+    ft.setAttribute('font-family', 'inherit'); ft.setAttribute('fill', n.color);
+    ft.setAttribute('font-weight', '700'); ft.setAttribute('pointer-events', 'none');
+    ft.textContent = freq;
+    el.appendChild(ft);
+  }
+  el.style.cursor = 'pointer';
+}
+
+function renderAllNodes() { nodes.forEach(renderNode); }
+
+/* ── Render path ────────────────────────────────────────── */
+function parallelOffset(p) {
+  const sibs = paths.filter(x =>
+    (x.from === p.from && x.to === p.to) ||
+    (x.from === p.to   && x.to === p.from)
+  );
+  const idx = sibs.indexOf(p);
+  return (idx - (sibs.length - 1) / 2) * 24;
+}
+
+function renderPath(p) {
+  let el = document.getElementById('sv-' + p.id);
+  const src = nodes.find(n => n.id === p.from);
+  const tgt = nodes.find(n => n.id === p.to);
+  if (!src || !tgt) return;
+  if (!el) {
+    el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    el.id = 'sv-' + p.id;
+    el.style.cursor = 'pointer';
+    el.addEventListener('mousedown', e => { if (mode === 'select') { e.stopPropagation(); selectItem(p.id); } });
+    gPaths.appendChild(el);
+  }
+  el.innerHTML = '';
+  const dx = tgt.x - src.x, dy = tgt.y - src.y;
+  const len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const off = parallelOffset(p);
+  const ox = -dy / len * off, oy = dx / len * off;
+  const mx = (src.x + tgt.x) / 2 + ox + (p.cx || 0);
+  const my = (src.y + tgt.y) / 2 + oy + (p.cy || 0);
+  const ang = Math.atan2(dy, dx);
+  const sx = src.x + Math.cos(ang) * src.r;
+  const sy = src.y + Math.sin(ang) * src.r;
+  const ex = tgt.x - Math.cos(ang) * tgt.r;
+  const ey = tgt.y - Math.sin(ang) * tgt.r;
+
+  const w = pathWeight(p), mw = maxPathWeight();
+  const baseW = showWeightVis ? 1 + 3.5 * (w / mw) : 1.8;
+  const isSel = selectedId === p.id;
+
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  line.setAttribute('d', `M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+  line.setAttribute('fill', 'none');
+  line.setAttribute('stroke', src.color);
+  line.setAttribute('stroke-width', isSel ? baseW + 1.5 : baseW);
+  line.setAttribute('stroke-opacity', isSel ? 1 : 0.6);
+  line.setAttribute('marker-end', 'url(#arrow)');
+  if (isSel) line.setAttribute('filter', 'url(#glow)');
+  el.appendChild(line);
+
+  const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  hit.setAttribute('d', `M${sx},${sy} Q${mx},${my} ${ex},${ey}`);
+  hit.setAttribute('fill', 'none'); hit.setAttribute('stroke', 'transparent'); hit.setAttribute('stroke-width', '14');
+  el.appendChild(hit);
+
+  if (showWeightVis && w > 1) {
+    const wt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    wt.setAttribute('x', mx); wt.setAttribute('y', my - 7);
+    wt.setAttribute('text-anchor', 'middle'); wt.setAttribute('font-size', '10');
+    wt.setAttribute('font-family', 'inherit'); wt.setAttribute('fill', src.color);
+    wt.setAttribute('pointer-events', 'none'); wt.textContent = '×' + w;
+    el.appendChild(wt);
+  }
+  if (p.label) {
+    const lt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lt.setAttribute('x', mx); lt.setAttribute('y', my - (showWeightVis && w > 1 ? 19 : 9));
+    lt.setAttribute('text-anchor', 'middle'); lt.setAttribute('font-size', '10');
+    lt.setAttribute('font-family', 'inherit'); lt.setAttribute('fill', src.color);
+    lt.setAttribute('pointer-events', 'none'); lt.textContent = p.label;
+    el.appendChild(lt);
+  }
+}
+
+function renderAllPaths() { paths.forEach(renderPath); }
+
+/* ── Heatmap ────────────────────────────────────────────── */
+function renderHeatmap() {
+  gHeat.innerHTML = '';
+  if (!showHeat || !nodes.length) return;
+  const mf = maxFreq();
+  nodes.forEach(n => {
+    const freq = nodeFreq(n.id);
+    if (!freq) return;
+    const intensity = freq / mf;
+    const blob = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    blob.setAttribute('cx', n.x); blob.setAttribute('cy', n.y);
+    blob.setAttribute('rx', 60 * intensity + 24); blob.setAttribute('ry', 50 * intensity + 18);
+    blob.setAttribute('fill', n.color); blob.setAttribute('opacity', 0.09 * intensity);
+    blob.setAttribute('pointer-events', 'none');
+    gHeat.appendChild(blob);
+  });
+}
+
+/* ── List + props ───────────────────────────────────────── */
+function renderList() {
+  const list = document.getElementById('node-list');
+  list.innerHTML = '';
+  const sorted = [...nodes].sort((a, b) => nodeFreq(b.id) - nodeFreq(a.id));
+  sorted.forEach(n => {
+    const freq = nodeFreq(n.id);
+    const el = document.createElement('div');
+    el.className = 'node-item' + (selectedId === n.id ? ' selected' : '');
+    el.innerHTML = `<span class="node-dot" style="background:${n.color}"></span><span class="node-name">${n.label}</span><span class="node-freq">${freq > 0 ? freq : ''}</span>`;
+    el.onclick = () => selectItem(n.id);
+    list.appendChild(el);
+  });
+}
+
+function selectItem(id) {
+  selectedId = id;
+  renderAllNodes(); renderAllPaths(); renderList(); showProps();
+}
+
+function showProps() {
+  const panel = document.getElementById('props-content');
+  const n = nodes.find(x => x.id === selectedId);
+  const p = paths.find(x => x.id === selectedId);
+  if (n) {
+    panel.innerHTML = `
+      <div class="prop-row"><div class="prop-label">Label</div>
+        <input type="text" id="pp-label" value="${n.label}" oninput="updNode('label',this.value)"></div>
+      <div class="prop-row"><div class="prop-label">Color</div>
+        <div class="color-row">${COLORS.map((c, i) => `<span class="swatch ${n.color === c ? 'active' : ''}" style="background:${c}" title="${CNAMES[i]}" onclick="updNode('color','${c}')"></span>`).join('')}</div></div>
+      <div class="prop-row"><div class="prop-label">Size <span id="size-val">${n.r}</span>px</div>
+        <input type="range" min="12" max="44" value="${n.r}" oninput="updNode('r',+this.value);document.getElementById('size-val').textContent=this.value"></div>
+      <button class="del-btn" onclick="deleteSelected()">Delete node</button>`;
+  } else if (p) {
+    const src = nodes.find(x => x.id === p.from);
+    const tgt = nodes.find(x => x.id === p.to);
+    panel.innerHTML = `
+      <div class="prop-row"><div class="prop-label">Label</div>
+        <input type="text" id="pp-plabel" value="${p.label || ''}" placeholder="optional" oninput="updPath('label',this.value)"></div>
+      <div class="prop-row"><div class="prop-label">Weight ×<span id="w-val">${p.weight || 1}</span></div>
+        <input type="range" min="1" max="10" value="${p.weight || 1}" oninput="updPath('weight',+this.value);document.getElementById('w-val').textContent=this.value"></div>
+      <div class="prop-row"><div class="prop-label">Curve X</div>
+        <input type="range" min="-150" max="150" value="${p.cx || 0}" oninput="updPath('cx',+this.value)"></div>
+      <div class="prop-row"><div class="prop-label">Curve Y</div>
+        <input type="range" min="-150" max="150" value="${p.cy || 0}" oninput="updPath('cy',+this.value)"></div>
+      ${src && tgt ? `<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:4px">${src.label} → ${tgt.label}</div>` : ''}
+      <button class="del-btn" onclick="deleteSelected()">Delete path</button>`;
+  } else {
+    panel.innerHTML = '<span style="color:var(--text-tertiary);font-size:12px">Select a node or path</span>';
+  }
+}
+
+function updNode(key, val) {
+  const n = nodes.find(x => x.id === selectedId); if (!n) return;
+  n[key] = val; renderNode(n); renderList(); renderHeatmap();
+  if (key === 'color') { renderAllPaths(); showProps(); }
+  if (key === 'r') renderAllPaths();
+}
+function updPath(key, val) {
+  const p = paths.find(x => x.id === selectedId); if (!p) return;
+  p[key] = val; renderAllPaths();
+  if (key === 'weight' && showHeat) { renderAllNodes(); renderHeatmap(); }
+}
+
+/* ── Path drawing ───────────────────────────────────────── */
+function handlePathClick(n) {
+  if (!pathStart) {
+    pathStart = n;
+    hint.textContent = 'Now click the destination node (click canvas to cancel)';
+  } else {
+    if (pathStart.id !== n.id) {
+      pushHistory();
+      const id = 'p' + (++uid);
+      paths.push({ id, from: pathStart.id, to: n.id, label: '', weight: 1, cx: 0, cy: 0 });
+      renderAllPaths(); updateStats(); selectItem(id); renderList();
+    }
+    pathStart = null; gPreview.innerHTML = '';
+    hint.textContent = 'Click source node, then destination node';
+  }
+}
+
+/* ── Drag ───────────────────────────────────────────────── */
+function dragStart(e, n) {
+  dragging = n;
+  const pt = svgPt(e);
+  dragOffset = { x: pt.x - n.x, y: pt.y - n.y };
+  selectItem(n.id);
+}
+
+/* ── Delete ─────────────────────────────────────────────── */
+function deleteSelected() {
+  if (!selectedId) return;
+  pushHistory();
+  const ni = nodes.findIndex(x => x.id === selectedId);
+  if (ni >= 0) {
+    const id = nodes[ni].id; nodes.splice(ni, 1);
+    document.getElementById('sv-' + id)?.remove();
+    paths = paths.filter(p => {
+      if (p.from === id || p.to === id) { document.getElementById('sv-' + p.id)?.remove(); return false; }
+      return true;
+    });
+  }
+  const pi = paths.findIndex(x => x.id === selectedId);
+  if (pi >= 0) { document.getElementById('sv-' + paths[pi].id)?.remove(); paths.splice(pi, 1); }
+  selectedId = null;
+  renderList(); renderAllPaths(); renderHeatmap(); showProps(); updateStats();
+}
+
+function clearAll() {
+  if (nodes.length && !confirm('Clear all nodes and paths?')) return;
+  pushHistory();
+  nodes = []; paths = []; uid = 0;
+  gNodes.innerHTML = ''; gPaths.innerHTML = ''; gPreview.innerHTML = ''; gHeat.innerHTML = '';
+  selectedId = null; renderList(); showProps(); updateStats();
+}
+
+function updateStats() {
+  document.getElementById('stat-nodes').textContent = nodes.length;
+  document.getElementById('stat-paths').textContent = paths.length;
+}
+
+/* ── Canvas mouse events ────────────────────────────────── */
+cv.addEventListener('mousedown', e => {
+  const onCanvas = e.target === cv || e.target.id === 'grid-bg';
+  if (mode === 'pan') { panStart = { x: e.clientX, y: e.clientY }; panBase = { x: transform.x, y: transform.y }; wrap.style.cursor = 'grabbing'; return; }
+  if (mode === 'node' && onCanvas) { const pt = svgPt(e); addNode(pt.x, pt.y); return; }
+  if (mode === 'path' && onCanvas) { pathStart = null; gPreview.innerHTML = ''; hint.textContent = 'Click source node, then destination node'; return; }
+  if (mode === 'select' && onCanvas) { selectedId = null; renderAllNodes(); renderAllPaths(); renderList(); showProps(); }
+});
+
+cv.addEventListener('mousemove', e => {
+  if (mode === 'pan' && panStart) {
+    transform.x = panBase.x + (e.clientX - panStart.x);
+    transform.y = panBase.y + (e.clientY - panStart.y);
+    applyTransform(); return;
+  }
+  if (dragging) {
+    const pt = svgPt(e);
+    dragging.x = pt.x - dragOffset.x; dragging.y = pt.y - dragOffset.y;
+    renderNode(dragging); renderAllPaths(); renderHeatmap(); return;
+  }
+  if (mode === 'path' && pathStart) {
+    const pt = svgPt(e);
+    gPreview.innerHTML = '';
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', pathStart.x); l.setAttribute('y1', pathStart.y);
+    l.setAttribute('x2', pt.x); l.setAttribute('y2', pt.y);
+    l.setAttribute('stroke', pathStart.color); l.setAttribute('stroke-width', '1.5');
+    l.setAttribute('stroke-dasharray', '6 4'); l.setAttribute('opacity', '0.5');
+    l.setAttribute('marker-end', 'url(#arrow)');
+    gPreview.appendChild(l);
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (dragging) { pushHistory(); dragging = null; }
+  panStart = null;
+  if (mode === 'pan') wrap.style.cursor = 'grab';
+});
+
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = cv.getBoundingClientRect();
+  zoomBy(e.deltaY < 0 ? 1.1 : 0.91, e.clientX - r.left, e.clientY - r.top);
+}, { passive: false });
+
+/* ── Keyboard ───────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  const active = document.activeElement.tagName;
+  if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.shiftKey ? redo() : undo(); }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'y') { redo(); }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId && active !== 'INPUT') { deleteSelected(); }
+  if (e.key === 'Escape') { pathStart = null; gPreview.innerHTML = ''; setMode('select'); }
+  if (!e.metaKey && !e.ctrlKey && active !== 'INPUT') {
+    if (e.key === 's') setMode('select');
+    if (e.key === 'n') setMode('node');
+    if (e.key === 'p') setMode('path');
+    if (e.key === 'v') setMode('pan');
+    if (e.key === 'f') fitView();
+    if (e.key === 'h') toggleHeatmap();
+    if (e.key === 'w') toggleWeights();
+    if (e.key === 'g') toggleGrid();
+  }
+});
+
+/* ── Export SVG ─────────────────────────────────────────── */
+function exportSVG() {
+  if (!nodes.length) { alert('Nothing to export.'); return; }
+  const xs = nodes.map(n => n.x), ys = nodes.map(n => n.y);
+  const pad = 70;
+  const minX = Math.min(...xs) - pad, maxX = Math.max(...xs) + pad;
+  const minY = Math.min(...ys) - pad, maxY = Math.max(...ys) + pad;
+  const w = maxX - minX, h = maxY - minY;
+  const inner = gNodes.innerHTML + gPaths.innerHTML;
+  const svgStr = `<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="${minX} ${minY} ${w} ${h}" width="${w}" height="${h}">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+<rect width="${w}" height="${h}" x="${minX}" y="${minY}" fill="white"/>
+<g>${inner}</g>
+</svg>`;
+  download(svgStr, 'spaghetti-diagram.svg', 'image/svg+xml');
+}
+
+/* ── Export / Import JSON ───────────────────────────────── */
+function exportJSON() {
+  if (!nodes.length) { alert('Nothing to export.'); return; }
+  const data = JSON.stringify({ version: 1, nodes, paths, uid }, null, 2);
+  download(data, 'spaghetti-diagram.json', 'application/json');
+}
+
+function importJSON() {
+  document.getElementById('file-input').click();
+}
+
+function handleImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (!d.nodes || !d.paths) throw new Error('Invalid format');
+      pushHistory();
+      nodes = d.nodes; paths = d.paths; uid = d.uid ?? 0;
+      gNodes.innerHTML = ''; gPaths.innerHTML = ''; gHeat.innerHTML = '';
+      nodes.forEach(renderNode); renderAllPaths(); renderHeatmap();
+      renderList(); updateStats(); showProps();
+      setTimeout(fitView, 50);
+    } catch { alert('Could not parse file. Make sure it\'s a valid spaghetti JSON export.'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function download(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ── Seed example ───────────────────────────────────────── */
+(function seed() {
+  const n1 = addNode(160, 130, 'Intake',   COLORS[0]);
+  const n2 = addNode(340,  80, 'Review',   COLORS[1]);
+  const n3 = addNode(340, 230, 'Rework',   COLORS[2]);
+  const n4 = addNode(520, 150, 'Approve',  COLORS[3]);
+  const n5 = addNode(520, 310, 'Archive',  COLORS[6]);
+  history = []; future = []; updateUndoRedo();
+
+  const addP = (from, to, w, label) => {
+    const id = 'p' + (++uid);
+    paths.push({ id, from, to, label: label || '', weight: w, cx: 0, cy: 0 });
+  };
+  addP(n1.id, n2.id, 4, 'review');
+  addP(n1.id, n3.id, 2, 'fast-track');
+  addP(n2.id, n3.id, 3, 'revise');
+  addP(n2.id, n4.id, 5, 'approve');
+  addP(n3.id, n2.id, 2, 're-review');
+  addP(n3.id, n4.id, 1, '');
+  addP(n4.id, n5.id, 4, 'file');
+  addP(n4.id, n1.id, 1, 'escalate');
+
+  renderAllPaths(); renderAllNodes(); renderList(); updateStats();
+  selectedId = null; showProps(); setMode('select');
+})();
+</script>
+</body>
+</html>
