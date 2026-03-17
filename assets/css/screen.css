@@ -102,6 +102,10 @@ header.primary {
     font-size: 3rem;
     margin: 0;
   }
+
+  & .ts{
+    text-align:center;
+  }
 }
 main {
   & > a.rth {
@@ -195,6 +199,10 @@ main {
 
   & h2 {
     margin: 0;
+  }
+
+  & span {
+    font-size:.8rem;
   }
 
   & .due {

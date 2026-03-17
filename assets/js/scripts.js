@@ -28,3 +28,8 @@ if (savedTheme === "dark") {
   body.classList.add("dark");
   toggleButton.textContent = "☀️";
 }
+
+
+
+  document.getElementById('time').textContent = new Date().toLocaleString();
+
