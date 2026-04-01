@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation in Systems Analysis — Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&display=swap');
+
+  :root {
+    --bg: #1a1a2e;
+    --card: #16213e;
+    --card2: #0f3460;
+    --accent: #e94560;
+    --gold: #f5a623;
+    --green: #2ecc71;
+    --text: #e0e0e0;
+    --muted: #8899aa;
+    --border: #2a3a5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Code Pro', monospace;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-bottom: 2rem;
+  }
+
+  /* ── SCREEN BASE ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── NAME SCREEN ── */
+  #name-screen {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  #name-screen p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"] {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    max-width: 320px;
+    display: block;
+    margin: 0 auto 1.2rem;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.65rem 1.8rem;
+    text-transform: uppercase;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  .btn-ghost {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-ghost:hover { border-color: var(--text); color: var(--text); opacity: 1; }
+
+  /* ── QUIZ SCREEN ── */
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .miss-count { color: var(--accent); }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .q-type {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .q-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── T/F BUTTONS ── */
+  .tf-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .tf-btn {
+    flex: 1;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.8rem;
+    text-transform: uppercase;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .tf-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+  .tf-btn:disabled { cursor: default; }
+  .tf-btn.correct { border-color: var(--green); background: rgba(46,204,113,0.12); color: var(--green); }
+  .tf-btn.wrong { border-color: var(--accent); background: rgba(233,69,96,0.12); color: var(--accent); }
+  .tf-btn.reveal { border-color: var(--green); background: rgba(46,204,113,0.06); color: var(--green); }
+
+  /* ── MC OPTIONS ── */
+  .mc-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .mc-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.88rem;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.4;
+  }
+
+  .mc-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(245,166,35,0.07); }
+  .mc-btn:disabled { cursor: default; }
+  .mc-btn.correct { border-color: var(--green); background: rgba(46,204,113,0.12); color: var(--green); }
+  .mc-btn.wrong { border-color: var(--accent); background: rgba(233,69,96,0.12); color: var(--accent); }
+  .mc-btn.reveal { border-color: var(--green); background: rgba(46,204,113,0.06); color: var(--green); }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    background: var(--card2);
+    border-left: 4px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    display: none;
+  }
+
+  .feedback.wrong { border-color: var(--accent); }
+
+  .feedback .fb-label {
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+    color: var(--green);
+  }
+
+  .feedback.wrong .fb-label { color: var(--accent); }
+
+  .next-row {
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  /* ── END SCREEN ── */
+  #end-screen {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .end-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-bottom: 0.25rem;
+  }
+
+  .score-display {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin: 1rem 0 0.25rem;
+  }
+
+  .score-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .summary-cell {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .summary-cell .val {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .summary-cell .lbl {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .miss-list {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    max-height: 260px;
+    overflow-y: auto;
+    text-align: left;
+  }
+
+  .miss-list h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .miss-item {
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    padding: 0.7rem 1rem;
+    line-height: 1.5;
+  }
+
+  .miss-item:last-child { border-bottom: none; }
+
+  .miss-item .mi-q {
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .miss-item .mi-a {
+    color: var(--green);
+  }
+
+  .grade {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Evaluation in Systems Analysis</h1>
+  <p class="subtitle">Quiz — Segments 1–4</p>
+
+  <!-- NAME SCREEN -->
+  <div id="name-screen" class="screen active">
+    <p>Enter your name to begin</p>
+    <input type="text" id="name-input" placeholder="Your name" maxlength="40" autocomplete="off">
+    <button class="btn" onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="screen">
+    <div class="meta">
+      <span id="q-counter"></span>
+      <span>Misses: <span class="miss-count" id="miss-counter">0</span></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div class="question-card">
+      <div class="q-type" id="q-type"></div>
+      <div class="q-text" id="q-text"></div>
+      <div id="q-options"></div>
+      <div class="feedback" id="q-feedback">
+        <div class="fb-label" id="fb-label"></div>
+        <div id="fb-text"></div>
+      </div>
+    </div>
+
+    <div class="next-row">
+      <button class="btn" id="next-btn" style="display:none" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end-screen" class="screen">
+    <div class="end-name" id="end-name"></div>
+    <div class="score-display" id="end-score"></div>
+    <div class="score-label">FINAL SCORE</div>
+    <div class="grade" id="end-grade"></div>
+    <div class="summary-grid">
+      <div class="summary-cell"><div class="val" id="sum-correct"></div><div class="lbl">Correct</div></div>
+      <div class="summary-cell"><div class="val" id="sum-miss"></div><div class="lbl">Misses</div></div>
+      <div class="summary-cell"><div class="val" id="sum-total"></div><div class="lbl">Total</div></div>
+    </div>
+    <div class="miss-list" id="miss-list" style="display:none">
+      <h3>Review Your Misses</h3>
+      <div id="miss-items"></div>
+    </div>
+    <button class="btn" onclick="restartQuiz()">Try Again</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // T/F
+  {
+    type: 'T/F',
+    q: 'Evaluation in systems analysis is straightforward once you have the right data.',
+    answer: false,
+    explain: 'Having data is necessary but not sufficient — you still need to decide what the data means, whether you measured the right things, and whose perspective counts.'
+  },
+  {
+    type: 'T/F',
+    q: 'Two stakeholders can legitimately reach opposite conclusions about whether a system is working.',
+    answer: true,
+    explain: 'Different stakeholders have different data, standards, concerns, and criteria — opposite conclusions are entirely possible and legitimate.'
+  },
+  {
+    type: 'T/F',
+    q: 'A good evaluation should be completely objective and free from human judgment.',
+    answer: false,
+    explain: 'Human judgment is unavoidable — at minimum in choosing what to measure and what standards to apply. The goal is to make judgment explicit and accountable, not to eliminate it.'
+  },
+  {
+    type: 'T/F',
+    q: 'If a system is effective and efficient, it is a success.',
+    answer: false,
+    explain: 'A system can be effective and efficient while generating serious unintended consequences or being fundamentally unsustainable.'
+  },
+  {
+    type: 'T/F',
+    q: 'Summative evaluation is more useful than formative evaluation because it gives a final definitive answer.',
+    answer: false,
+    explain: 'Formative evaluation is generally more useful because it happens while there is still opportunity to improve the system. Summative happens after — like a coroner\'s report.'
+  },
+  {
+    type: 'T/F',
+    q: 'Agile sprint retrospectives are an example of formative evaluation.',
+    answer: true,
+    explain: 'Sprint retrospectives are explicitly designed to evaluate process and product while there is still opportunity to change course — the defining feature of formative evaluation.'
+  },
+  {
+    type: 'T/F',
+    q: 'Asking "is this evaluation trustworthy?" is cynicism, not analysis.',
+    answer: false,
+    explain: 'Questioning trustworthiness is a necessary act of analytical rigor — the last line of defense against evaluation being used to rubber-stamp decisions already made.'
+  },
+  {
+    type: 'T/F',
+    q: 'An evaluation conducted by an external consultant is automatically more trustworthy than an internal one.',
+    answer: false,
+    explain: 'External consultants can have conflicts of interest too — wanting repeat business, sharing professional biases, or being selected because the client expects a favorable result.'
+  },
+  {
+    type: 'T/F',
+    q: 'If an evaluator is technically competent and follows correct methodology, their personal interests cannot affect the evaluation result.',
+    answer: false,
+    explain: 'Structural incentives and unconscious bias shape outcomes even when evaluators are technically competent and acting in good faith.'
+  },
+  {
+    type: 'T/F',
+    q: 'The best solution to evaluator bias is to find a perfectly neutral evaluator.',
+    answer: false,
+    explain: 'Perfectly neutral evaluators do not exist. The practical solution is to make interests transparent, create structural independence, and triangulate across multiple perspectives.'
+  },
+  {
+    type: 'T/F',
+    q: 'Unintended consequences are accidents that could be prevented with better intelligence and planning.',
+    answer: false,
+    explain: 'Unintended consequences are inevitable in complex systems because their full complexity is so hard to understand. Good evaluation catches them early enough to fix them.'
+  },
+  // MC
+  {
+    type: 'Multiple Choice',
+    q: 'Which dimension of evaluation asks: "Can we trust the evaluation itself?"',
+    options: ['The System', 'The Criteria', 'The Analysis Process', 'The Evaluators'],
+    answer: 3,
+    explain: 'Dimension 4 — The Evaluators — asks whether the evaluation itself is trustworthy. The System asks if it works; Criteria asks what "work" means; Process asks if analysts did good work.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'Formative evaluation is analogous to:',
+    options: ['A coroner\'s report', 'A doctor monitoring a patient during treatment', 'A final grade in a course', 'An executive summary to funders'],
+    answer: 1,
+    explain: 'Formative = diagnostic, during treatment, opportunity to improve. Summative = judgmental, after completion — like a coroner\'s report or final grade.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'The "cobra effect" is an example of which category of unintended consequence?',
+    options: ['Scaling effect', 'Adoption effect', 'Displacement effect', 'Summative effect'],
+    answer: 2,
+    explain: 'A displacement effect is when the system solves problem A but creates or worsens problem B. The cobra bounty program solved nothing and worsened the cobra population.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'In the objectivist view, where do evaluation criteria come from?',
+    options: ['Negotiated among stakeholders', 'Derived from system requirements', 'Determined by the funder', 'Selected by the analyst'],
+    answer: 1,
+    explain: 'The objectivist view holds that criteria come from system requirements and can be measured by any qualified expert. The interpretivist view holds criteria are negotiated among stakeholders.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'The sustainable health IT case study failed for multiple reasons simultaneously. Which of the following was NOT listed as a failure?',
+    options: ['Evaluating at 18 months instead of 3 years', 'Donor commissioning and controlling the evaluation', 'Using too many evaluators (over-triangulation)', 'Measuring downloads instead of sustained use'],
+    answer: 2,
+    explain: 'Over-triangulation was never identified as a failure. The failures were: wrong criteria, wrong timing, analyst bias, self-evaluation by donor, and wrong stakeholder voices.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: '"When a vendor evaluates the system they built and their contract renewal depends on a positive result" — which evaluator problem does this illustrate?',
+    options: ['Honest mistake', 'Unconscious bias', 'Motivated reasoning / structural conflict of interest', 'Scaling effect'],
+    answer: 2,
+    explain: 'This is a structural conflict of interest — a form of motivated reasoning where the evaluator has a direct incentive tied to the outcome, compromising independence.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'Why does high quality evaluation draw from BOTH objectivism and interpretivism?',
+    options: [
+      'Because objectivism ensures rigor while interpretivism ensures stakeholder trust and context-sensitivity',
+      'Because interpretivism is always more accurate than objectivism',
+      'Because funders require both approaches by law',
+      'Because objectivism eliminates all bias when combined with interpretivism'
+    ],
+    answer: 0,
+    explain: 'Each view has strengths the other lacks. Objectivism provides rigor and comparability; interpretivism provides validity, context-sensitivity, and stakeholder trust. Real evaluation plans borrow from both.'
+  },
+  {
+    type: 'Multiple Choice',
+    q: 'Which practical response to evaluator bias addresses the structural problem most directly?',
+    options: [
+      'Require evaluators to complete ethics training',
+      'Separate the evaluator from who pays for the evaluation',
+      'Use only evaluators with PhD credentials',
+      'Limit evaluators to one per project'
+    ],
+    answer: 1,
+    explain: 'Structural independence — separating the evaluator from the funder or builder — matters more than stated intentions. It removes the conflict of interest at its root rather than managing it.'
+  }
+];
+
+let playerName = '';
+let current = 0;
+let misses = 0;
+let missedItems = [];
+let shuffled = [];
+let answered = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+  const val = document.getElementById('name-input').value.trim();
+  if (!val) { document.getElementById('name-input').focus(); return; }
+  playerName = val;
+  shuffled = shuffle(QUESTIONS);
+  current = 0; misses = 0; missedItems = [];
+  show('quiz-screen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = shuffled[current];
+  const total = shuffled.length;
+
+  document.getElementById('q-counter').textContent = `Q ${current + 1} of ${total}`;
+  document.getElementById('miss-counter').textContent = misses;
+  document.getElementById('progress-fill').style.width = `${(current / total) * 100}%`;
+  document.getElementById('q-type').textContent = q.type;
+  document.getElementById('q-text').textContent = q.q;
+
+  const fb = document.getElementById('q-feedback');
+  fb.style.display = 'none';
+  fb.className = 'feedback';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+
+  if (q.type === 'T/F') {
+    opts.innerHTML = `<div class="tf-row">
+      <button class="tf-btn" onclick="answerTF(true)">True</button>
+      <button class="tf-btn" onclick="answerTF(false)">False</button>
+    </div>`;
+  } else {
+    let html = '<div class="mc-options">';
+    q.options.forEach((o, i) => {
+      html += `<button class="mc-btn" onclick="answerMC(${i})">${o}</button>`;
+    });
+    html += '</div>';
+    opts.innerHTML = html;
+  }
+}
+
+function showFeedback(correct, q) {
+  const fb = document.getElementById('q-feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback' + (correct ? '' : ' wrong');
+  document.getElementById('fb-label').textContent = correct ? '✓ Correct' : '✗ Incorrect';
+  document.getElementById('fb-text').textContent = q.explain;
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.querySelectorAll('.tf-btn, .mc-btn').forEach(b => b.disabled = true);
+}
+
+function answerTF(val) {
+  if (answered) return;
+  answered = true;
+  const q = shuffled[current];
+  const correct = val === q.answer;
+  const btns = document.querySelectorAll('.tf-btn');
+  btns.forEach(b => {
+    const bval = b.textContent === 'True';
+    if (bval === q.answer) b.classList.add('correct');
+    else if (bval === val && !correct) b.classList.add('wrong');
+  });
+  if (!correct) { misses++; missedItems.push({q: q.q, a: q.answer ? 'True' : 'False'}); }
+  showFeedback(correct, q);
+}
+
+function answerMC(idx) {
+  if (answered) return;
+  answered = true;
+  const q = shuffled[current];
+  const correct = idx === q.answer;
+  const btns = document.querySelectorAll('.mc-btn');
+  btns.forEach((b, i) => {
+    if (i === q.answer) b.classList.add('correct');
+    else if (i === idx && !correct) b.classList.add('wrong');
+  });
+  if (!correct) { misses++; missedItems.push({q: q.q, a: q.options[q.answer]}); }
+  showFeedback(correct, q);
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= shuffled.length) { showResults(); return; }
+  renderQuestion();
+}
+
+function showResults() {
+  const total = shuffled.length;
+  const correct = total - misses;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('end-name').textContent = playerName;
+  document.getElementById('end-score').textContent = `${pct}%`;
+  document.getElementById('sum-correct').textContent = correct;
+  document.getElementById('sum-miss').textContent = misses;
+  document.getElementById('sum-total').textContent = total;
+
+  const grades = [
+    [90, 'Excellent — you\'ve mastered this material.'],
+    [75, 'Solid understanding. A few gaps to revisit.'],
+    [60, 'Getting there. Review the misses below.'],
+    [0,  'More study needed. Use the miss list to guide review.']
+  ];
+  document.getElementById('end-grade').textContent = grades.find(([t]) => pct >= t)[1];
+
+  if (missedItems.length > 0) {
+    const ml = document.getElementById('miss-list');
+    ml.style.display = 'block';
+    document.getElementById('miss-items').innerHTML = missedItems.map(m =>
+      `<div class="miss-item"><div class="mi-q">${m.q}</div><div class="mi-a">✓ ${m.a}</div></div>`
+    ).join('');
+  } else {
+    document.getElementById('miss-list').style.display = 'none';
+  }
+
+  show('end-screen');
+}
+
+function restartQuiz() {
+  shuffled = shuffle(QUESTIONS);
+  current = 0; misses = 0; missedItems = [];
+  show('quiz-screen');
+  renderQuestion();
+}
+
+// Enter key on name input
+document.getElementById('name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startQuiz();
+});
+</script>
+</body>
+</html>
