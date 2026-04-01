@@ -29,12 +29,12 @@ body h2.section-heading {
   border-bottom: 1px solid var(--dark-accent-color);
 }
 
-.ele-ct{
-  margin:0;
-  text-align:right;
+.ele-ct {
+  margin: 0;
+  text-align: right;
   flex: 0 0 100%;
-  font-weight:bold;
-  text-transform:capitalize;
+  font-weight: bold;
+  text-transform: capitalize;
 }
 .section-heading {
   flex: 0 0 100%;
@@ -55,9 +55,13 @@ h2.section-heading + h3.section-heading {
   padding-right: 40px;
   margin-bottom: 40px;
 
-  & img{
-    margin-top:20px;
-    display:inline-block;
+  iframe {
+    margin: 35px 0 20px;
+  }
+
+  & img {
+    margin-top: 20px;
+    display: inline-block;
   }
 }
 .markup {
@@ -103,7 +107,7 @@ h2.section-heading + h3.section-heading {
   }
   & .markup {
     flex: 1 70%;
-    background-color: rgb(58, 57, 57, .8);
+    background-color: rgb(58, 57, 57, 0.8);
     padding: 10px;
     margin-bottom: 40px;
     overflow: auto;
@@ -254,10 +258,9 @@ pre[class*="language-"] {
 .token.entity {
   cursor: help;
 }
- button{
-  display:block;
-  margin-bottom:20px;
-  padding:5px; 
-  border-radius:5px;
-
- }
+button {
+  display: block;
+  margin-bottom: 20px;
+  padding: 5px;
+  border-radius: 5px;
+}
