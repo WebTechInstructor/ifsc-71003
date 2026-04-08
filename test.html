@@ -1,0 +1,375 @@
+<!-- 1. alert()
+       alert() displays a modal popup dialog with a message and an OK button. 
+       It pauses all page activity until dismissed. -->
+<button
+  type="button"
+  onclick="alert('This message is displayed using alert().')"
+>
+  Output using alert()
+</button>
+
+<hr />
+
+<!-- 2. Array
+       An array stores multiple values in a single variable as an ordered list.
+        Each item has a numbered index starting at 0, so the second item is accessed 
+        with index [1]. -->
+<p id="arrayArea">Array item will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let fruits = ['apple', 'banana', 'cherry'];
+    document.getElementById('arrayArea').textContent = fruits[1];
+  "
+>
+  Show Array Item
+</button>
+
+<hr />
+
+<!-- 3. Simple math operation
+       The + operator adds two numbers together. JavaScript evaluates the 
+       expression and displays the sum. -->
+<p id="mathArea2">Math result will appear here.</p>
+<button
+  type="button"
+  onclick="document.getElementById('mathArea2').textContent = 5 + 3"
+>
+  Calculate 5 + 3
+</button>
+
+<strong>PHP Equivalent</strong>
+
+<p><?php echo 5 + 3; ?></p>
+
+<!-- 4. JS Operator Example
+       The * operator multiplies two numbers together. JavaScript evaluates the 
+       expression and returns the result. -->
+<p id="mathArea">Math result will appear here.</p>
+<button
+  type="button"
+  onclick="document.getElementById('mathArea').textContent = 7 * 13"
+>
+  Calculate 7 * 13
+</button>
+
+<hr />
+
+<!-- 5. Change background color
+       The style.backgroundColor property changes the background color of an element.
+        Using 'this' targets the button itself. -->
+<button type="button" onclick="this.style.backgroundColor = 'lightgreen'">
+  Change Button Background
+</button>
+
+<hr />
+
+<!-- 6. Change text color
+       The style.color property changes the foreground color of an element using any valid 
+       CSS color value. -->
+<button
+  type="button"
+  onclick="document.getElementById('textArea').style.color = 'blue'"
+>
+  Change Text Color
+</button>
+
+<hr />
+
+<!-- 7. textContent
+       The textContent property sets or gets the plain text content of an 
+       element, stripping out any HTML tags. -->
+<p id="textArea">This text can change.</p>
+<button
+  type="button"
+  onclick="
+    document.getElementById('textArea').textContent =
+      'Text updated using textContent.'
+  "
+>
+  Change Text (textContent)
+</button>
+
+<hr />
+
+<!-- 8. if/else
+       An if/else statement runs different blocks of code depending on 
+       whether a condition evaluates to true or false. It is the most 
+       fundamental decision-making tool in programming. -->
+<p id="conditionArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let num = 15;
+    if (num > 10) {
+      document.getElementById('conditionArea').textContent =
+        num + ' is greater than 10';
+    } else {
+      document.getElementById('conditionArea').textContent =
+        num + ' is not greater than 10';
+    }
+  "
+>
+  Check Condition (if/else)
+</button>
+
+<hr />
+
+<!-- 9. typeof
+       The typeof operator returns a string describing the data type of 
+       a value, such as 'number', 'string', or 'boolean'. It is useful for 
+       debugging when you are unsure what kind of data a variable holds. -->
+<button
+  type="button"
+  onclick="alert(typeof 42 + '\n' + typeof 'hello' + '\n' + typeof true)"
+>
+  Check Data Types (typeof)
+</button>
+
+<hr />
+
+<!-- * 10. if statement
+       An if statement runs a block of code only when a condition is true. 
+       If the condition is false, nothing happens — there is no fallback. -->
+<p id="ifArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let score = 85;
+    if (score >= 60) {
+      document.getElementById('ifArea').textContent = 'You passed!';
+    }
+  "
+>
+  Check if Passing Score (if)
+</button>
+
+<hr />
+
+<!-- * 11. else if
+       An else if construct chains multiple conditions together, 
+       checking each one in order until a true condition is found. 
+       JavaScript stops at the first true match and skips the rest. -->
+<p id="elseIfArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let score = 72;
+    if (score >= 90) {
+      document.getElementById('elseIfArea').textContent = 'Grade: A';
+    } else if (score >= 80) {
+      document.getElementById('elseIfArea').textContent = 'Grade: B';
+    } else if (score >= 70) {
+      document.getElementById('elseIfArea').textContent = 'Grade: C';
+    } else {
+      document.getElementById('elseIfArea').textContent = 'Grade: F';
+    }
+  "
+>
+  Check Letter Grade (else if)
+</button>
+
+<hr />
+
+<!-- 12. console.log()
+       console.log() writes a message to the browser's developer console. 
+       It is invisible to users and is used by developers for debugging. 
+       Open the console with F12 to see the output. -->
+<button type="button" onclick="console.log('Hello from the console!')">
+  Log to Console
+</button>
+
+<hr />
+
+<!-- 13. toUpperCase()
+       toUpperCase() is a string method that returns a new version of the 
+       string with all characters converted to uppercase. It is called using 
+       dot notation directly on a string value. -->
+<p id="caseArea">Text will appear here.</p>
+<button
+  type="button"
+  onclick="
+    document.getElementById('caseArea').textContent =
+      'hello world'.toUpperCase()
+  "
+>
+  Convert to Uppercase
+</button>
+<strong>PHP Equivalent</strong>
+<p><?php echo strtoupper('hello world'); ?></p>
+
+<hr />
+
+<!-- 14. Date()
+       The Date() function returns the current date and time as a formatted 
+       string based on the user's system clock. -->
+<p id="dateArea">Date will appear here.</p>
+<button
+  type="button"
+  onclick="document.getElementById('dateArea').textContent = Date()"
+>
+  Show Current Date
+</button>
+
+<strong>PHP Equivalent (Example #14)</strong><br />
+<p><?php echo date('D M d Y H:i:s'); ?></p>
+
+<hr />
+
+<!-- * 15. do...while loop
+       A do...while loop runs the code block first, then checks the condition. 
+       This guarantees the code runs at least once even if the condition is false from the start. -->
+<p id="doWhileArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let total = 0;
+    let i = 1;
+    do {
+      total += i;
+      i++;
+    } while (i <= 5);
+    document.getElementById('doWhileArea').textContent = 'Total: ' + total;
+  "
+>
+  Do...While Loop
+</button>
+
+<hr />
+
+<!-- 16. document.write()
+       document.write() writes a string directly to the HTML document. 
+       Note: calling it after the page loads replaces the entire page. -->
+<button
+  type="button"
+  onclick="document.write('This text was written using document.write()')"
+>
+  Output using document.write()
+</button>
+
+<hr />
+
+<!-- 17. for loop
+       A for loop repeats a block of code a set number of times.
+        This loop adds every number from 0 to 199 together by 
+        accumulating a running total in the variable 'sum'. -->
+<p id="loopArea">Sum will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let sum = 0;
+    for (let i = 0; i <= 199; i++) {
+      sum += i;
+    }
+    document.getElementById('loopArea').textContent = 'Sum: ' + sum;
+  "
+>
+  For Loop (0–199)
+</button>
+
+<hr />
+
+<!-- 18. Math.random()
+       Math.random() is a method on the built-in Math object that 
+       generates a random decimal number between 0 (inclusive) and 
+       1 (exclusive) each time it is called. -->
+<p id="randomArea">Random number will appear here.</p>
+<button
+  type="button"
+  onclick="document.getElementById('randomArea').textContent = Math.random()"
+>
+  Generate Random Number
+</button>
+
+<hr />
+
+<!-- 19. innerHTML
+       The innerHTML property sets or gets the HTML content inside an element, 
+       including any tags, not just plain text. -->
+<p id="outputArea">
+  This text will change when the innerHTML button is clicked.
+</p>
+<button
+  type="button"
+  onclick="
+    document.getElementById('outputArea').innerHTML =
+      'The innerHTML method has updated this paragraph.'
+  "
+>
+  Output using innerHTML
+</button>
+
+<hr />
+
+<!-- * 20. Math.round()
+       Math.round() rounds a decimal number to the nearest whole number — up if
+        the decimal is .5 or higher, down if it is lower. It is one of several 
+        rounding methods on the built-in Math object. -->
+<p id="roundArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="document.getElementById('roundArea').textContent = Math.round(7.6)"
+>
+  Math.round()
+</button>
+<strong>PHP Equivalent (Example #20)</strong>
+<p><?php echo round(7.6); ?></p>
+<hr />
+
+<!-- 21. window.print()
+       window.print() opens the browser's print dialog, allowing the user to 
+       print or save the current page as a PDF. -->
+<button type="button" onclick="window.print()">
+  Print this page (window.print())
+</button>
+
+<hr />
+
+<!-- 22. confirm() dialog
+       confirm() displays a modal dialog with OK and Cancel buttons and 
+       returns true if OK is clicked, false if Cancel is clicked. -->
+<button type="button" onclick="confirm('Click OK or Cancel.')">
+  Show Confirm Box
+</button>
+
+<hr />
+
+<!-- * 23. while loop
+       A while loop repeats a block of code for as long as a condition remains 
+       true. It checks the condition before each pass, so if the condition 
+       starts false the loop never runs. -->
+<p id="whileArea">Result will appear here.</p>
+<button
+  type="button"
+  onclick="
+    let total = 0;
+    let i = 1;
+    while (i <= 5) {
+      total += i;
+      i++;
+    }
+    document.getElementById('whileArea').textContent = 'Total: ' + total;
+  "
+>
+  While Loop
+</button>
+
+<hr />
+
+<!-- 24. setTimeout()
+       setTimeout() schedules a function to run once after a specified 
+       delay in milliseconds. The code inside does not run immediately — 
+       it is handed off to run later, making this an example of a callback function. -->
+<p id="timerArea">Waiting...</p>
+<button
+  type="button"
+  onclick="
+    document.getElementById('timerArea').textContent = 'Waiting...';
+    setTimeout(function () {
+      document.getElementById('timerArea').textContent =
+        'This appeared after 3 seconds!';
+    }, 3000);
+  "
+>
+  Start Timer (setTimeout)
+</button>
