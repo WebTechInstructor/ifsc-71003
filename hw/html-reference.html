@@ -124,7 +124,14 @@ echo "Hello World - Note this code is generated via php and included in this pag
               >
                 Calculate 7 * 13
               </button>
-
+              <div>
+                <strong>PHP Equivalent (Example #4)</strong><br />
+                <iframe
+                  src="https://thomaswallace.net/isa-demos/snippet-12-1.php"
+                  frameborder="0"
+                  class="embed"
+                ></iframe>
+              </div>
               <hr />
 
               <!-- 5. Change background color
@@ -354,6 +361,15 @@ echo "Hello World - Note this code is generated via php and included in this pag
                 For Loop (0–199)
               </button>
 
+              <div>
+                <strong>PHP Equivalent (Example #17)</strong><br />
+                <iframe
+                  src="https://thomaswallace.net/isa-demos/snippet-12-2.php"
+                  frameborder="0"
+                  class="embed"
+                ></iframe>
+              </div>
+
               <hr />
 
               <!-- 18. Math.random()
@@ -445,6 +461,15 @@ echo "Hello World - Note this code is generated via php and included in this pag
                 While Loop
               </button>
 
+              <div>
+                <strong>PHP Equivalent (Example #17)</strong><br />
+                <iframe
+                  src="https://thomaswallace.net/isa-demos/snippet-12-3.php"
+                  frameborder="0"
+                  class="embed"
+                ></iframe>
+              </div>
+
               <hr />
 
               <!-- 24. setTimeout()
@@ -522,6 +547,10 @@ echo "Hello World - Note this code is generated via php and included in this pag
 >
   Calculate 7 * 13
 </button>
+
+<strong>PHP Equivalent</strong>
+
+<p><?php echo 7 * 13; ?></p>
 
 <hr />
 
@@ -737,6 +766,14 @@ echo "Hello World - Note this code is generated via php and included in this pag
   For Loop (0–199)
 </button>
 
+<strong>PHP Equivalent #17</strong>
+<?php
+    $sum = 0;
+    for ($i = 0; $i <= 199; $i++) {
+      $sum += $i;
+    }
+    echo 'Sum: ' . $sum;
+  ?>
 <hr />
 
 <!-- 18. Math.random()
@@ -823,6 +860,17 @@ echo "Hello World - Note this code is generated via php and included in this pag
 >
   While Loop
 </button>
+
+<strong>PHP Equivalent</strong>
+  <?php
+    $total = 0;
+    $i = 1;
+    while ($i <= 5) {
+      $total += $i;
+      $i++;
+    }
+    echo 'Total: ' . $total;
+  ?>
 
 <hr />
 
